@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour {
 
 
     //TODO add matrix of tiles and matrix of frogs, seperate
-    byte[,] bF = new byte[5, 4];
+    byte[,] bF = new byte[6, 4];
 
         bF[0, 0] = 1;
         bF[0, 1] = 1;
@@ -79,22 +79,27 @@ public class GameManager : MonoBehaviour {
         bF[1, 0] = 1;
         bF[1, 1] = 0;
         bF[1, 2] = 1;
-        bF[1, 3] = 1;
+        bF[1, 3] = 2;
         bF[2, 0] = 1;
         bF[2, 1] = 3;
         bF[2, 2] = 101;
         bF[2, 3] = 1;
         bF[3, 0] = 1;
-        bF[3, 1] = 1;
+        bF[3, 1] = 4;
         bF[3, 2] = 1;
         bF[3, 3] = 1;
         bF[4, 0] = 1;
-        bF[4, 1] = 1;
+        bF[4, 1] = 5;
         bF[4, 2] = 1;
         bF[4, 3] = 1;
+        bF[5, 0] = 6;
+        bF[5, 1] = 1;
+        bF[5, 2] = 7;
+        bF[5, 3] = 1;
 
 
-        byte[,] mF = new byte[5, 4];
+
+        byte[,] mF = new byte[6, 4];
 
         mF[0, 0] = 0;
         mF[0, 1] = 1;
@@ -116,7 +121,10 @@ public class GameManager : MonoBehaviour {
         mF[4, 1] = 0;
         mF[4, 2] = 0;
         mF[4, 3] = 0;
-
+        mF[5, 0] = 0;
+        mF[5, 1] = 0;
+        mF[5, 2] = 0;
+        mF[5, 3] = 0;
 
 
         MovablePieces = new List<MovablePiece>();

@@ -15,6 +15,8 @@ public class TilePiece : MonoBehaviour {
     public bool KillsPieceOnLand;
     public bool KillsPieceOnJumpOver;
     public bool IsRedirector;
+
+    [HideInInspector]
     public Vector2 RedirectDirection;
     public bool IsDestination;
     public int DestinationType;

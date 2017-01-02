@@ -78,7 +78,8 @@ MonoBehaviour:
     type: 2}
   ObstaclePiece: {fileID: 1000013538552254, guid: fc5833ea08c3b064796437308908afe3,
     type: 2}
-  RedirectPiece: {fileID: 0}
+  RedirectPiece: {fileID: 1000012246038532, guid: d6eda7d96cf0fb44dae379b8a76506c6,
+    type: 2}
   EnemyPiece: {fileID: 1000010347448452, guid: ac2cc955e9c5d704694a8ff0392aae8e, type: 2}
   DisappearingPiece: {fileID: 1000010150590890, guid: 48f73a287ec7e874e8fc8b787f1c0da9,
     type: 2}
