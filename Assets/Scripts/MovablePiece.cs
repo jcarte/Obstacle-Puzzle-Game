@@ -68,7 +68,6 @@ public class MovablePiece : MonoBehaviour {
             //Recalculate the remaining distance after moving.
             sqrRemainingDistance = (transform.position - end).sqrMagnitude;
 
-            GameManager.Instance.PlayerCanMove = false;//TODO better way of capturing this? find when coroutine finishes
 
             //Return and loop until sqrRemainingDistance is close enough to zero to end the function
             yield return null;

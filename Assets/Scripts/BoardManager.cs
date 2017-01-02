@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public class BoardManager : MonoBehaviour {
 
     //Templates
-    public GameObject[] MovablePieces;          //100-109
-    public GameObject[] DestinationPieces;      //200-209
+    public GameObject[] MovablePieces;          //1-10
+    public GameObject[] DestinationPieces;      //101-110
     public GameObject EmptyPiece;               //0
     public GameObject LandingPiece;             //1
     public GameObject NonLandingPiece;          //2
@@ -21,30 +21,38 @@ public class BoardManager : MonoBehaviour {
     //public int NumberOfRows { get; private set; }
     //public int NumberOfColumns { get; private set; }
 
-    public void SetupBoard(byte[,] config)
+    public void SetupBoard(byte[,] tiles, byte[,] movables)
     {
         
 
         List<GameObject> normPieces = new List<GameObject>()
         { EmptyPiece, LandingPiece, NonLandingPiece, ObstaclePiece, RedirectPiece,EnemyPiece,DisappearingPiece,FakeDisappearingPiece};
 
-        for (int r = 0; r <= config.GetUpperBound(0); r++)
+        for (int r = 0; r <= tiles.GetUpperBound(0); r++)
         {
-            for (int c = 0; c <= config.GetUpperBound(1); c++)
+            for (int c = 0; c <= tiles.GetUpperBound(1); c++)
             {
-                byte id = config[r, c];//TODO add check on id, more exceptions etc
+                byte tId = tiles[r, c];//TODO add check on id, more exceptions etc
                 GameObject t;
-                if (id < 8)
-                    t = normPieces[id];
-                else if (id >= 100 && id <= 109)
-                    t = MovablePieces[id - 100];
-                else if (id >= 200 && id <= 209)
-                    t = DestinationPieces[id - 200];
+                if (tId < 8)
+                    t = normPieces[tId];
+                
+                else if (tId >= 101 && tId <= 110)
+                    t = DestinationPieces[tId - 101];
                 else
                     throw new System.Exception("Config Parsing Error, Unrecognised ID");
 
                 Instantiate(t, new Vector3(c, -r, 0f), Quaternion.identity);
+
+                //Do movables
+                byte mId = movables[r, c];
+                if (mId > 0)
+                {
+                    GameObject mT = MovablePieces[mId - 1];
+                    Instantiate(mT, new Vector3(c, -r, 0f), Quaternion.identity);
+                }
                 
+
             }
         }
 
@@ -127,11 +135,19 @@ public class BoardManager : MonoBehaviour {
         //Check if we have a non-zero value for horizontal or vertical
         if (horizontal != 0 || vertical != 0)
         {
-            
-            //vertically down (-1) means increase row number (+1)
-            Debug.Log("Input: " + horizontal + "," + -vertical);
-            GameManager.Instance.MoveCurrentPiece(horizontal, -vertical);
 
+            //vertically down (-1) means increase row number (+1)
+            //Debug.Log("Input: " + horizontal + "," + -vertical);
+            //GameManager.Instance.MoveCurrentPiece(horizontal, -vertical);
+
+            if (horizontal > 0)
+                GameManager.Instance.MoveCurrentPiece(GameManager.Direction.Right);
+            else if (horizontal < 0)
+                GameManager.Instance.MoveCurrentPiece(GameManager.Direction.Left);
+            else if (vertical > 0)
+                GameManager.Instance.MoveCurrentPiece(GameManager.Direction.Up);
+            else if (vertical < 0)
+                GameManager.Instance.MoveCurrentPiece(GameManager.Direction.Down);
         }
     }
 }
