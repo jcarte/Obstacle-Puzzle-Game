@@ -42,14 +42,16 @@ public class BoardManager : MonoBehaviour {
                 else
                     throw new System.Exception("Config Parsing Error, Unrecognised ID");
 
-                Instantiate(t, new Vector3(c, -r, 0f), Quaternion.identity);
+                //Instantiate(t, new Vector3(c, -r, 0f), Quaternion.identity);
+                AddTile(t, r, c);
 
                 //Do movables
                 byte mId = movables[r, c];
                 if (mId > 0)
                 {
                     GameObject mT = MovablePieces[mId - 1];
-                    Instantiate(mT, new Vector3(c, -r, 0f), Quaternion.identity);
+                    //Instantiate(mT, new Vector3(c, -r, 0f), Quaternion.identity);
+                    AddTile(mT, r, c);
                 }
                 
 
@@ -58,6 +60,11 @@ public class BoardManager : MonoBehaviour {
 
     }
     
+
+    public void AddTile(GameObject go, int row, int col)
+    {
+        Instantiate(go, new Vector3(col, -row, 0f), Quaternion.identity);
+    }
 
 
 	// Use this for initialization

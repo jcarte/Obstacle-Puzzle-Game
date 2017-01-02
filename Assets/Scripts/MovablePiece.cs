@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class MovablePiece : MonoBehaviour {
 
@@ -8,9 +9,12 @@ public class MovablePiece : MonoBehaviour {
     public float moveTime = 0.1f;			//Time it will take object to move, in seconds.
     private float inverseMoveTime;			//Used to make movement more efficient.
 
+    public Color PieceColour;
 
     public int Column { get { return (int)transform.position.x; } }
     public int Row { get { return -(int)transform.position.y; } }
+
+    public event EventHandler MovementCompleted;
 
     //TODO Merge move and jump? Need a redirect?
     public void Move(int rows, int cols)
@@ -24,7 +28,7 @@ public class MovablePiece : MonoBehaviour {
         // Calculate end position based on the direction parameters passed in when calling Move.
         Vector2 end = start + new Vector2(cols, -rows);
 
-        Debug.Log("StartMove (" + start.y + "," + start.x + ") End (" + end.y + "," + end.x + ")");
+        //Debug.Log("StartMove (" + start.y + "," + start.x + ") End (" + end.y + "," + end.x + ")");
 
         //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
         StartCoroutine(SmoothMovement(end));
@@ -41,7 +45,7 @@ public class MovablePiece : MonoBehaviour {
         // Calculate end position based on the direction parameters passed in when calling Move.
         Vector2 end = start + new Vector2(cols, -rows);
 
-        Debug.Log("StartJump (" + start.y + "," + start.x + ") End (" + end.y + "," + end.x + ")");
+        //Debug.Log("StartJump (" + start.y + "," + start.x + ") End (" + end.y + "," + end.x + ")");
 
         //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
         StartCoroutine(SmoothMovement(end));
@@ -73,7 +77,9 @@ public class MovablePiece : MonoBehaviour {
             yield return null;
         }
 
-        GameManager.Instance.PlayerCanMove = true;
+        if (MovementCompleted != null)
+            MovementCompleted.Invoke(this, null);
+        //GameManager.Instance.PlayerCanMove = true;
     }
 
 

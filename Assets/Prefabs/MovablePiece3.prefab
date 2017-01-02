@@ -71,6 +71,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveTime: 0.1
+  PieceColour: {r: 0, g: 1, b: 0, a: 0}
 --- !u!212 &212000014126687998
 SpriteRenderer:
   m_ObjectHideFlags: 1

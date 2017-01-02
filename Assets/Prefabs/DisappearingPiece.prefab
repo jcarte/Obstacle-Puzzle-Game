@@ -54,12 +54,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CanBeLandedOn: 1
   CanBeJumpedOver: 0
+  IsDestroyedOnJumpOver: 0
+  IsDestroyedOnMoveOn: 1
   KillsPieceOnLand: 1
   KillsPieceOnJumpOver: 0
   IsRedirector: 0
   RedirectDirection: {x: 0, y: 0}
   IsDestination: 0
-  DestinationType: 0
+  PieceColour: {r: 0, g: 0, b: 0, a: 0}
 --- !u!212 &212000010840090606
 SpriteRenderer:
   m_ObjectHideFlags: 1

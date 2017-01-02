@@ -12,6 +12,9 @@ public class TilePiece : MonoBehaviour {
     public void AnimatePieceJumpedOver() { }
 
 
+    public bool IsDestroyedOnJumpOver;
+    public bool IsDestroyedOnMoveOn;
+
     public bool KillsPieceOnLand;
     public bool KillsPieceOnJumpOver;
     public bool IsRedirector;
@@ -19,8 +22,12 @@ public class TilePiece : MonoBehaviour {
     [HideInInspector]
     public Vector2 RedirectDirection;
     public bool IsDestination;
-    public int DestinationType;
 
+    public Color PieceColour;
+
+
+    public int Column { get { return (int)transform.position.x; } }
+    public int Row { get { return -(int)transform.position.y; } }
 
     // Use this for initialization
     void Start()

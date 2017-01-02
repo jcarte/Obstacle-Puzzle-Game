@@ -90,48 +90,6 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &1388354162
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4000013536739440, guid: 27e96c32d0cee5343a3e87c2a6f7f1d2, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4000013536739440, guid: 27e96c32d0cee5343a3e87c2a6f7f1d2, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4000013536739440, guid: 27e96c32d0cee5343a3e87c2a6f7f1d2, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4000013536739440, guid: 27e96c32d0cee5343a3e87c2a6f7f1d2, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4000013536739440, guid: 27e96c32d0cee5343a3e87c2a6f7f1d2, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4000013536739440, guid: 27e96c32d0cee5343a3e87c2a6f7f1d2, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4000013536739440, guid: 27e96c32d0cee5343a3e87c2a6f7f1d2, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4000013536739440, guid: 27e96c32d0cee5343a3e87c2a6f7f1d2, type: 2}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 27e96c32d0cee5343a3e87c2a6f7f1d2, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &1795446744
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,7 +151,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 7
+  orthographic size: 1
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
