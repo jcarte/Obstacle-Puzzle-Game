@@ -15,6 +15,7 @@ public class MovablePiece : MonoBehaviour {
     public int Row { get { return -(int)transform.position.y; } }
 
     public event EventHandler MovementCompleted;
+    public event EventHandler Clicked;
 
     //TODO Merge move and jump? Need a redirect?
     public void Move(int rows, int cols)
@@ -83,6 +84,14 @@ public class MovablePiece : MonoBehaviour {
     }
 
 
+    
+
+    private void OnMouseDown()
+    {
+        if (Clicked != null)
+            Clicked.Invoke(this, null);
+        //Debug.Log("sprite clicked");
+    }
 
 
 

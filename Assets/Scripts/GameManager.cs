@@ -163,9 +163,10 @@ public class GameManager : MonoBehaviour {
     {
         MovablePieces.Add(mp);
         mp.MovementCompleted += (s, e) => OnPlayerMoveComplete();
+        mp.Clicked += (s, e) => MovablePieceSelected(s as MovablePiece);
 
         //TODO delete
-        SelectedPiece = mp;
+        //SelectedPiece = mp;
     }
 
     public void RemoveMovablePiece(MovablePiece mp)
@@ -178,6 +179,11 @@ public class GameManager : MonoBehaviour {
     }
 
     
+    public void MovablePieceSelected(MovablePiece mp)
+    {
+        if(mp!=null && MovablePieces.Contains(mp))
+            SelectedPiece = mp;
+    }
 
     public void AddTilePiece(TilePiece tp)
     {
@@ -362,5 +368,11 @@ public class GameManager : MonoBehaviour {
  * -Game manager becoming too bloated, sort of concerns between GM and boardmanager, what do they do?
  * -Check all tile logic (figure out redirect), build test boards to check
  * -Load from file (figure out level loading)
- * -Select different frogs
  */
+
+
+ /*
+  * New Structure....
+  * 
+  * 
+  */

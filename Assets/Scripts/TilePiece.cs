@@ -35,6 +35,9 @@ public class TilePiece : MonoBehaviour {
         GameManager.Instance.AddTilePiece(this);
     }
 
+
+    
+
     //// Update is called once per frame
     //void Update () {
 
