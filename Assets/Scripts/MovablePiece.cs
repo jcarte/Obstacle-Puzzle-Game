@@ -17,6 +17,17 @@ public class MovablePiece : MonoBehaviour {
     public event EventHandler MovementCompleted;
     public event EventHandler Clicked;
 
+
+    public void Move(TilePiece t)
+    {
+        Move(t.Row - Row, t.Column - Column);
+    }
+
+    public void Jump(TilePiece t)
+    {
+        Jump(t.Row - Row, t.Column - Column);
+    }
+
     //TODO Merge move and jump? Need a redirect?
     public void Move(int rows, int cols)
     {

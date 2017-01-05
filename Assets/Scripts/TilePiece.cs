@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Linq;
 
 public class TilePiece : MonoBehaviour {
 
@@ -19,8 +20,8 @@ public class TilePiece : MonoBehaviour {
     public bool KillsPieceOnJumpOver;
     public bool IsRedirector;
 
-    [HideInInspector]
-    public Vector2 RedirectDirection;
+
+    public Vector2 RedirectDirection;//TODO FIX THIS IN SCRAPE
     public bool IsDestination;
 
     public Color PieceColour;
@@ -28,6 +29,10 @@ public class TilePiece : MonoBehaviour {
 
     public int Column { get { return (int)transform.position.x; } }
     public int Row { get { return -(int)transform.position.y; } }
+
+
+    public bool HasMovableOnIt { get { return GameManager.Instance.MovablePieces.Any(m => m.Row == Row && m.Column == Column); } }
+    //public bool IsLandable { get { return CanBeLandedOn && !HasMovableOnIt; } }
 
     // Use this for initialization
     void Start()

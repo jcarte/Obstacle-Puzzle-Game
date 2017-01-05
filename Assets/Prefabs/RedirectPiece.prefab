@@ -52,14 +52,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 840c7ec2b85437e448a6b9dcd262ca6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CanBeLandedOn: 1
+  CanBeLandedOn: 0
   CanBeJumpedOver: 0
+  IsDestroyedOnJumpOver: 0
+  IsDestroyedOnMoveOn: 0
   KillsPieceOnLand: 0
   KillsPieceOnJumpOver: 0
   IsRedirector: 1
-  RedirectDirection: {x: 0, y: 0}
+  RedirectDirection: {x: 1, y: 0}
   IsDestination: 0
-  DestinationType: 0
+  PieceColour: {r: 0, g: 0, b: 0, a: 0}
 --- !u!212 &212000011853592904
 SpriteRenderer:
   m_ObjectHideFlags: 1

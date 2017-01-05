@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour {
         bF[2, 1] = 3;
         bF[2, 2] = 101;
         bF[2, 3] = 1;
-        bF[3, 0] = 101;
+        bF[3, 0] = 1;
         bF[3, 1] = 4;
         bF[3, 2] = 1;
         bF[3, 3] = 1;
@@ -141,7 +141,7 @@ public class GameManager : MonoBehaviour {
         mF[7, 0] = 0;
         mF[7, 1] = 0;
         mF[7, 2] = 0;
-        mF[7, 3] = 0;
+        mF[7, 3] = 1;
 
         MovablePieces = new List<MovablePiece>();
 
@@ -200,9 +200,20 @@ public class GameManager : MonoBehaviour {
     }
 
 
+    //TODO needed?
     public enum Direction
     {
         Up, Down, Left, Right
+    }
+
+    //TODO package r/c together in struct?
+    private TilePiece GetTilePiece(int row, int col)
+    {
+        //is inside board
+        if(row >= 0 && row <= Board.GetUpperBound(0) && col >= 0 && col <= Board.GetUpperBound(1))
+            return Board[row, col];
+        else
+            return null;
     }
 
 
@@ -210,106 +221,212 @@ public class GameManager : MonoBehaviour {
     {
         if (SelectedPiece == null)//no piece selected, can't process move
             return;
+
+        int dRow = 0;
+        int dCol = 0;
+
+        if (dir == Direction.Up)
+            dRow = -1;
+        else if (dir == Direction.Down)
+            dRow = 1;
+        else if (dir == Direction.Left)
+            dCol = -1;
+        else if (dir == Direction.Right)
+            dCol = 1;
+
+        TilePiece t = GetTilePiece(SelectedPiece.Row + dRow, SelectedPiece.Column + dCol);
+
+        if (t == null)
+            return;//not valid move
+
         
-        PlayerCanMove = false;//stop accepting new moves while evaluate last
 
-        int moveRows = 0;//num rows/cols to move/jump
-        int moveCols = 0;
-
-        int jumpRows = 0;
-        int jumpCols = 0;
-
-        switch (dir)//fill in move based on direction
+        if (t.IsRedirector)
         {
-            case Direction.Up:
-                moveRows = -1;
-                jumpRows = -2;
-                break;
-            case Direction.Down:
-                moveRows = 1;
-                jumpRows = 2;
-                break;
-            case Direction.Left:
-                moveCols = -1;
-                jumpCols = -2;
-                break;
-            case Direction.Right:
-                moveCols = 1;
-                jumpCols = 2;
-                break;
-            default:
-                return;
-        }
+            Debug.Log("IsRedirect");
+            int rowDest = t.Row - (int)Math.Round(t.RedirectDirection.y,0);
+            int colDest = t.Column + (int)Math.Round(t.RedirectDirection.x,0);
 
-        //get position of piece after moving/jumping in given direction
-        int endMoveRow = SelectedPiece.Row + moveRows;
-        int endMoveCol = SelectedPiece.Column + moveCols;
-        int endJumpRow = SelectedPiece.Row + jumpRows;
-        int endJumpCol = SelectedPiece.Column + jumpCols;
-
-        //would moving/jumping in given direction move the piece outside of the board?
-        bool canMove = endMoveRow >= 0 && endMoveRow <= Board.GetUpperBound(0) && endMoveCol >= 0 && endMoveCol <= Board.GetUpperBound(1);
-        bool canJump = endJumpRow >= 0 && endJumpRow <= Board.GetUpperBound(0) && endJumpCol >= 0 && endJumpCol <= Board.GetUpperBound(1);
-
-        bool isMovingPieceOnMove = MovablePieces.Any(m => m.Column == endMoveCol && m.Row == endMoveRow);
-        bool isMovingPieceOnJump = MovablePieces.Any(m => m.Column == endJumpCol && m.Row == endJumpRow);
-
-        //piece to be landed on after move/jump
-        TilePiece movePiece = canMove ? Board[endMoveRow, endMoveCol] : null;
-        TilePiece jumpPiece = canJump ? Board[endJumpRow, endJumpCol] : null;
-
-        if (canMove && !isMovingPieceOnMove && movePiece.CanBeLandedOn)//do a move if not out of bounds, no moving place already there
-        {
-            SelectedPiece.Move(moveRows, moveCols);
-
-            if (movePiece.KillsPieceOnLand)
+            
+            TilePiece destT = GetTilePiece(rowDest, colDest);
+            Debug.Log((destT != null) + "  " + (destT.CanBeLandedOn) + "  " + (!destT.HasMovableOnIt) + "  FROM " + t.Row + " " + t.Column + "     TO " + rowDest + " " + colDest);
+            if (destT !=null && destT.CanBeLandedOn && !destT.HasMovableOnIt)
             {
-                MovablePieces.Remove(SelectedPiece);
-                SelectedPiece.gameObject.SetActive(false);
-                SelectedPiece = null;
-            }
-
-            if(movePiece.IsDestroyedOnMoveOn)
-            {
-                movePiece.gameObject.SetActive(false);
-                Board[endMoveRow, endMoveCol] = null;
-                boardScript.AddTile(boardScript.EmptyPiece, endMoveRow, endMoveCol);
+                //MoveToPiece(t);//TODO fix broken because of coroutine
+                MoveToPiece(destT);
             }
         }
-        else if(canJump && (movePiece.CanBeJumpedOver || isMovingPieceOnMove) && !isMovingPieceOnJump && jumpPiece.CanBeLandedOn)//do a jump
+        else if(t.CanBeLandedOn && !t.HasMovableOnIt)
         {
-            SelectedPiece.Jump(jumpRows, jumpCols);
-
-            if (movePiece.KillsPieceOnJumpOver || jumpPiece.KillsPieceOnLand)
-            {
-                MovablePieces.Remove(SelectedPiece);
-                SelectedPiece.gameObject.SetActive(false);
-                SelectedPiece = null;
-            }
-
-            if (movePiece.IsDestroyedOnJumpOver)
-            {
-                movePiece.gameObject.SetActive(false);
-                Board[endMoveRow, endMoveCol] = null;
-                boardScript.AddTile(boardScript.EmptyPiece, endMoveRow, endMoveCol);
-            }
-
-            if (jumpPiece.IsDestroyedOnMoveOn)
-            {
-                jumpPiece.gameObject.SetActive(false);
-                Board[endJumpRow, endJumpCol] = null;
-                boardScript.AddTile(boardScript.EmptyPiece, endJumpRow, endJumpCol);
-            }
+            Debug.Log("Single Move");
+            MoveToPiece(t);
         }
-        else//no move happened
+        else if(t.CanBeJumpedOver)//Check Jumping
         {
-            PlayerCanMove = true;
-            return;
+            Debug.Log("Attempt Jump");
+            TilePiece j = GetTilePiece(SelectedPiece.Row + (2*dRow), SelectedPiece.Column + (2*dCol));
+            if (j != null && j.CanBeLandedOn && !j.HasMovableOnIt)
+                JumpToPiece(t,j);
         }
 
-        //OnPlayerMoveComplete();
+        Debug.Log("Not valid");
     }
-    
+
+
+    private void MoveToPiece(TilePiece p)
+    {
+        PlayerCanMove = false;
+
+        SelectedPiece.Move(p);
+
+        if (p.KillsPieceOnLand)
+        {
+            MovablePieces.Remove(SelectedPiece);
+            SelectedPiece.gameObject.SetActive(false);
+            SelectedPiece = null;
+        }
+
+        if (p.IsDestroyedOnMoveOn)
+        {
+            p.gameObject.SetActive(false);
+            Board[p.Row, p.Column] = null;
+            boardScript.AddTile(boardScript.EmptyPiece, p.Row, p.Column);
+        }
+
+    }
+
+    private void JumpToPiece(TilePiece overPiece, TilePiece destPiece)
+    {
+        PlayerCanMove = false;
+
+        SelectedPiece.Jump(destPiece);
+
+        if (overPiece.KillsPieceOnJumpOver || destPiece.KillsPieceOnLand)
+        {
+            MovablePieces.Remove(SelectedPiece);
+            SelectedPiece.gameObject.SetActive(false);
+            SelectedPiece = null;
+        }
+
+        if (overPiece.IsDestroyedOnJumpOver)
+        {
+            overPiece.gameObject.SetActive(false);
+            Board[overPiece.Row, overPiece.Column] = null;
+            boardScript.AddTile(boardScript.EmptyPiece, overPiece.Row, overPiece.Column);
+        }
+
+        if (destPiece.IsDestroyedOnMoveOn)
+        {
+            destPiece.gameObject.SetActive(false);
+            Board[destPiece.Row, destPiece.Column] = null;
+            boardScript.AddTile(boardScript.EmptyPiece, destPiece.Row, destPiece.Column);
+        }
+    }
+
+    //public void MoveCurrentPiece(Direction dir)
+    //{
+    //    if (SelectedPiece == null)//no piece selected, can't process move
+    //        return;
+
+    //    PlayerCanMove = false;//stop accepting new moves while evaluate last
+
+    //    int moveRows = 0;//num rows/cols to move/jump
+    //    int moveCols = 0;
+
+    //    int jumpRows = 0;
+    //    int jumpCols = 0;
+
+    //    switch (dir)//fill in move based on direction
+    //    {
+    //        case Direction.Up:
+    //            moveRows = -1;
+    //            jumpRows = -2;
+    //            break;
+    //        case Direction.Down:
+    //            moveRows = 1;
+    //            jumpRows = 2;
+    //            break;
+    //        case Direction.Left:
+    //            moveCols = -1;
+    //            jumpCols = -2;
+    //            break;
+    //        case Direction.Right:
+    //            moveCols = 1;
+    //            jumpCols = 2;
+    //            break;
+    //        default:
+    //            return;
+    //    }
+
+    //    //get position of piece after moving/jumping in given direction
+    //    int endMoveRow = SelectedPiece.Row + moveRows;
+    //    int endMoveCol = SelectedPiece.Column + moveCols;
+    //    int endJumpRow = SelectedPiece.Row + jumpRows;
+    //    int endJumpCol = SelectedPiece.Column + jumpCols;
+
+    //    //would moving/jumping in given direction move the piece outside of the board?
+    //    bool canMove = endMoveRow >= 0 && endMoveRow <= Board.GetUpperBound(0) && endMoveCol >= 0 && endMoveCol <= Board.GetUpperBound(1);
+    //    bool canJump = endJumpRow >= 0 && endJumpRow <= Board.GetUpperBound(0) && endJumpCol >= 0 && endJumpCol <= Board.GetUpperBound(1);
+
+    //    bool isMovingPieceOnMove = MovablePieces.Any(m => m.Column == endMoveCol && m.Row == endMoveRow);
+    //    bool isMovingPieceOnJump = MovablePieces.Any(m => m.Column == endJumpCol && m.Row == endJumpRow);
+
+    //    //piece to be landed on after move/jump
+    //    TilePiece movePiece = canMove ? Board[endMoveRow, endMoveCol] : null;
+    //    TilePiece jumpPiece = canJump ? Board[endJumpRow, endJumpCol] : null;
+
+    //    if (canMove && !isMovingPieceOnMove && movePiece.CanBeLandedOn)//do a move if not out of bounds, no moving place already there
+    //    {
+    //        SelectedPiece.Move(moveRows, moveCols);
+
+    //        if (movePiece.KillsPieceOnLand)
+    //        {
+    //            MovablePieces.Remove(SelectedPiece);
+    //            SelectedPiece.gameObject.SetActive(false);
+    //            SelectedPiece = null;
+    //        }
+
+    //        if(movePiece.IsDestroyedOnMoveOn)
+    //        {
+    //            movePiece.gameObject.SetActive(false);
+    //            Board[endMoveRow, endMoveCol] = null;
+    //            boardScript.AddTile(boardScript.EmptyPiece, endMoveRow, endMoveCol);
+    //        }
+    //    }
+    //    else if(canJump && (movePiece.CanBeJumpedOver || isMovingPieceOnMove) && !isMovingPieceOnJump && jumpPiece.CanBeLandedOn)//do a jump
+    //    {
+    //        SelectedPiece.Jump(jumpRows, jumpCols);
+
+    //        if (movePiece.KillsPieceOnJumpOver || jumpPiece.KillsPieceOnLand)
+    //        {
+    //            MovablePieces.Remove(SelectedPiece);
+    //            SelectedPiece.gameObject.SetActive(false);
+    //            SelectedPiece = null;
+    //        }
+
+    //        if (movePiece.IsDestroyedOnJumpOver)
+    //        {
+    //            movePiece.gameObject.SetActive(false);
+    //            Board[endMoveRow, endMoveCol] = null;
+    //            boardScript.AddTile(boardScript.EmptyPiece, endMoveRow, endMoveCol);
+    //        }
+
+    //        if (jumpPiece.IsDestroyedOnMoveOn)
+    //        {
+    //            jumpPiece.gameObject.SetActive(false);
+    //            Board[endJumpRow, endJumpCol] = null;
+    //            boardScript.AddTile(boardScript.EmptyPiece, endJumpRow, endJumpCol);
+    //        }
+    //    }
+    //    else//no move happened
+    //    {
+    //        PlayerCanMove = true;
+    //        return;
+    //    }
+
+    //    //OnPlayerMoveComplete();
+    //}
+
     public void OnPlayerMoveComplete()
     {
         Debug.Log("End of Turn");
@@ -366,13 +483,15 @@ public class GameManager : MonoBehaviour {
  * ==========
  * -Handle end of move check better, currently if kill player end of turn doesn't get evaluated (bit messy)
  * -Game manager becoming too bloated, sort of concerns between GM and boardmanager, what do they do?
- * -Check all tile logic (figure out redirect), build test boards to check
+ * -Build test boards to check
  * -Load from file (figure out level loading)
  */
 
-
- /*
-  * New Structure....
-  * 
-  * 
-  */
+//New Structure....
+/*
+ * Redirect
+ *      Rotate Tile
+ * 
+ * Change input, each tile has properties e.g. direct direction, has moving player on it, colour of tile
+ * MovingPiece inherits from TilePiece?
+ */

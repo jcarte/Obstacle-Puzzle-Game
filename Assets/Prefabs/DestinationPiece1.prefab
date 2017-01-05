@@ -53,7 +53,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CanBeLandedOn: 1
-  CanBeJumpedOver: 0
+  CanBeJumpedOver: 1
   IsDestroyedOnJumpOver: 0
   IsDestroyedOnMoveOn: 0
   KillsPieceOnLand: 0
