@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Linq;
 
-public class TilePiece : MonoBehaviour {
+public class TilePiece : BasePiece {
 
     //TODO implement
     //private Animator animator;
@@ -24,11 +24,6 @@ public class TilePiece : MonoBehaviour {
     public Vector2 RedirectDirection;//TODO FIX THIS IN SCRAPE
     public bool IsDestination;
 
-    public Color PieceColour;
-
-
-    public int Column { get { return (int)transform.position.x; } }
-    public int Row { get { return -(int)transform.position.y; } }
 
 
     public bool HasMovableOnIt { get { return GameManager.Instance.MovablePieces.Any(m => m.Row == Row && m.Column == Column); } }

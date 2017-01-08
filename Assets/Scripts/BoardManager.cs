@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class BoardManager : MonoBehaviour {
 
@@ -21,44 +22,102 @@ public class BoardManager : MonoBehaviour {
     //public int NumberOfRows { get; private set; }
     //public int NumberOfColumns { get; private set; }
 
-    public void SetupBoard(byte[,] tiles, byte[,] movables)
+    private Level lvl;
+
+
+    public void SetupBoard(Level lv)
     {
-        
+        lvl = lv;
 
-        List<GameObject> normPieces = new List<GameObject>()
-        { EmptyPiece, LandingPiece, NonLandingPiece, ObstaclePiece, RedirectPiece,EnemyPiece,DisappearingPiece,FakeDisappearingPiece};
-
-        for (int r = 0; r <= tiles.GetUpperBound(0); r++)
+        for (int r = 0; r < lvl.RowCount; r++)
         {
-            for (int c = 0; c <= tiles.GetUpperBound(1); c++)
+            for (int c = 0; c < lvl.ColumnCount; c++)
             {
-                byte tId = tiles[r, c];//TODO add check on id, more exceptions etc
-                GameObject t;
-                if (tId < 8)
-                    t = normPieces[tId];
-                
-                else if (tId >= 101 && tId <= 110)
-                    t = DestinationPieces[tId - 101];
-                else
-                    throw new System.Exception("Config Parsing Error, Unrecognised ID");
+                Level.Cell ce = lvl.Array[r].Cells[c];
 
-                //Instantiate(t, new Vector3(c, -r, 0f), Quaternion.identity);
-                AddTile(t, r, c);
+                GameObject go = null;
 
-                //Do movables
-                byte mId = movables[r, c];
-                if (mId > 0)
+                switch (ce.Tile.Type)
                 {
-                    GameObject mT = MovablePieces[mId - 1];
-                    //Instantiate(mT, new Vector3(c, -r, 0f), Quaternion.identity);
-                    AddTile(mT, r, c);
+                    case Level.TileType.Empty:
+                        go = EmptyPiece;
+                        break;
+                    case Level.TileType.Landing:
+                        go = LandingPiece;
+                        break;
+                    case Level.TileType.NonLanding:
+                        go = NonLandingPiece;
+                        break;
+                    case Level.TileType.Obstacle:
+                        go = ObstaclePiece;
+                        break;
+                    case Level.TileType.Enemy:
+                        go = EnemyPiece;
+                        break;
+                    case Level.TileType.Disappearing:
+                        go = DisappearingPiece;
+                        break;
+                    case Level.TileType.FakeDisappearing:
+                        go = FakeDisappearingPiece;
+                        break;
+                    case Level.TileType.Destination:
+                        go = DestinationPieces[0];//TODO colour fix
+                        break;
+                    case Level.TileType.Redirect:
+                        go = RedirectPiece;//TODO add redirect vector
+                        break;
                 }
-                
+
+                AddTile(go, r, c);
+
+                if (ce.Movable != null)
+                {
+                    GameObject mgo = MovablePieces[0];//TODO colour fix;
+                    AddTile(mgo, r, c);
+                }
 
             }
         }
-
     }
+
+    //public void SetupBoard(byte[,] tiles, byte[,] movables)
+    //{
+        
+
+    //    List<GameObject> normPieces = new List<GameObject>()
+    //    { EmptyPiece, LandingPiece, NonLandingPiece, ObstaclePiece, RedirectPiece,EnemyPiece,DisappearingPiece,FakeDisappearingPiece};
+
+    //    for (int r = 0; r <= tiles.GetUpperBound(0); r++)
+    //    {
+    //        for (int c = 0; c <= tiles.GetUpperBound(1); c++)
+    //        {
+    //            byte tId = tiles[r, c];//TODO add check on id, more exceptions etc
+    //            GameObject t;
+    //            if (tId < 8)
+    //                t = normPieces[tId];
+                
+    //            else if (tId >= 101 && tId <= 110)
+    //                t = DestinationPieces[tId - 101];
+    //            else
+    //                throw new System.Exception("Config Parsing Error, Unrecognised ID");
+
+    //            //Instantiate(t, new Vector3(c, -r, 0f), Quaternion.identity);
+    //            AddTile(t, r, c);
+
+    //            //Do movables
+    //            byte mId = movables[r, c];
+    //            if (mId > 0)
+    //            {
+    //                GameObject mT = MovablePieces[mId - 1];
+    //                //Instantiate(mT, new Vector3(c, -r, 0f), Quaternion.identity);
+    //                AddTile(mT, r, c);
+    //            }
+                
+
+    //        }
+    //    }
+
+    //}
     
 
     public void AddTile(GameObject go, int row, int col)

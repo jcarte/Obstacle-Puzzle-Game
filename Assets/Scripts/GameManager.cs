@@ -52,105 +52,51 @@ public class GameManager : MonoBehaviour {
 
     private void InitGame()
     {
-        //TODO get board file
-        //byte[,] bF = new byte[4, 3];
-
-        //bF[0, 0] = 0;
-        //bF[0, 1] = 1;
-        //bF[0, 2] = 2;
-        //bF[1, 0] = 3;
-        //bF[1, 1] = 0;
-        //bF[1, 2] = 100;
-        //bF[2, 0] = 100;
-        //bF[2, 1] = 200;
-        //bF[2, 2] = 200;
-        //bF[3, 0] = 0;
-        //bF[3, 1] = 1;
-        //bF[3, 2] = 2;
-
-
         MoveCount = 0;
-
-    //TODO add matrix of tiles and matrix of frogs, seperate
-        byte[,] bF = new byte[8, 4];
-        byte[,] mF = new byte[8, 4];
-
-        bF[0, 0] = 1;
-        bF[0, 1] = 1;
-        bF[0, 2] = 0;
-        bF[0, 3] = 1;
-        bF[1, 0] = 1;
-        bF[1, 1] = 0;
-        bF[1, 2] = 0;
-        bF[1, 3] = 2;
-        bF[2, 0] = 1;
-        bF[2, 1] = 3;
-        bF[2, 2] = 101;
-        bF[2, 3] = 1;
-        bF[3, 0] = 1;
-        bF[3, 1] = 4;
-        bF[3, 2] = 1;
-        bF[3, 3] = 1;
-        bF[4, 0] = 1;
-        bF[4, 1] = 5;
-        bF[4, 2] = 1;
-        bF[4, 3] = 1;
-        bF[5, 0] = 6;
-        bF[5, 1] = 1;
-        bF[5, 2] = 7;
-        bF[5, 3] = 1;
-        bF[6, 0] = 6;
-        bF[6, 1] = 1;
-        bF[6, 2] = 7;
-        bF[6, 3] = 1;
-        bF[7, 0] = 6;
-        bF[7, 1] = 1;
-        bF[7, 2] = 7;
-        bF[7, 3] = 1;
-
-
-
-        mF[0, 0] = 0;
-        mF[0, 1] = 1;
-        mF[0, 2] = 0;
-        mF[0, 3] = 0;
-        mF[1, 0] = 1;
-        mF[1, 1] = 0;
-        mF[1, 2] = 0;
-        mF[1, 3] = 0;
-        mF[2, 0] = 0;
-        mF[2, 1] = 0;
-        mF[2, 2] = 0;
-        mF[2, 3] = 0;
-        mF[3, 0] = 0;
-        mF[3, 1] = 0;
-        mF[3, 2] = 0;
-        mF[3, 3] = 0;
-        mF[4, 0] = 0;
-        mF[4, 1] = 0;
-        mF[4, 2] = 0;
-        mF[4, 3] = 0;
-        mF[5, 0] = 0;
-        mF[5, 1] = 0;
-        mF[5, 2] = 0;
-        mF[5, 3] = 0;
-        mF[6, 0] = 0;
-        mF[6, 1] = 0;
-        mF[6, 2] = 0;
-        mF[6, 3] = 0;
-        mF[7, 0] = 0;
-        mF[7, 1] = 0;
-        mF[7, 2] = 0;
-        mF[7, 3] = 1;
-
         MovablePieces = new List<MovablePiece>();
 
-        Board = new TilePiece[bF.GetUpperBound(0)+1, bF.GetUpperBound(1)+1];
-        boardScript = GetComponent<BoardManager>();
-        boardScript.SetupBoard(bF,mF);
+        Level v1 = Level.Create(4, 5);
 
-        float width = bF.GetUpperBound(1);
-        float height = bF.GetUpperBound(0);
+        for (int r = 0; r < v1.RowCount; r++)
+        {
+            for (int c = 0; c < v1.ColumnCount; c++)
+            {
+                v1.ChangeTile(r, c, Level.TileType.Landing);
+                
+            }
+        }
+
+        v1.AddMovable(1, 1, Level.ColourType.Blue);
+        v1.AddMovable(2, 2, Level.ColourType.Red);
+        v1.ChangeTile(0, 2,Level.TileType.Disappearing);
+        v1.ChangeTile(3, 3,Level.TileType.Destination,Level.ColourType.Blue);
+
+
+        //v1.ChangeTile(0, 0, Level.TileType.Disappearing);
+        //v1.ChangeTile(0, 1, Level.TileType.Enemy);
+        //v1.ChangeTile(0, 2, Level.TileType.FakeDisappearing);
+        //v1.ChangeTile(0, 3, Level.TileType.NonLanding);
+        //v1.ChangeTile(0, 4, Level.TileType.Obstacle);
+        //v1.ChangeTile(1, 0, Level.TileType.Redirect, 2, 2);
+        //v1.ChangeTile(1, 1, Level.TileType.Landing);
+        //v1.ChangeTile(1, 2, Level.TileType.Landing);
+        //v1.ChangeTile(1, 3, Level.TileType.Landing);
+        //v1.ChangeTile(2, 3, Level.TileType.Destination, Level.ColourType.Red);
+        //v1.AddMovable(1, 1, Level.ColourType.Red);
+
+
+        //string path = "Levels\\Level1.DAT";
+        //LevelManager.SaveLevel(v1, path);
+
+        //Level lvl = LevelManager.RestoreLevel(path);
+        Level lvl = v1;
+
+        Board = new TilePiece[lvl.RowCount, lvl.ColumnCount];
+        boardScript = GetComponent<BoardManager>();
+        boardScript.SetupBoard(lvl);
+
+        float width = lvl.ColumnCount;
+        float height = lvl.RowCount;
 
         Camera cam = GameObject.Find("Main Camera").GetComponent<Camera>();
         cam.transform.position = new Vector3(width * 0.5f, height * -0.5f, -10f);
@@ -176,13 +122,19 @@ public class GameManager : MonoBehaviour {
         if (SelectedPiece == mp)
             SelectedPiece = null;
         MovablePieces.Remove(mp);
+        mp.gameObject.SetActive(false);
+        //OnPlayerMoveComplete();
     }
 
     
     public void MovablePieceSelected(MovablePiece mp)
     {
         if(mp!=null && MovablePieces.Contains(mp))
+        {
+            Debug.Log("New selected Movable Piece");
             SelectedPiece = mp;
+        }
+            
     }
 
     public void AddTilePiece(TilePiece tp)
@@ -281,9 +233,8 @@ public class GameManager : MonoBehaviour {
 
         if (p.KillsPieceOnLand)
         {
-            MovablePieces.Remove(SelectedPiece);
-            SelectedPiece.gameObject.SetActive(false);
-            SelectedPiece = null;
+            RemoveMovablePiece(SelectedPiece);
+            OnPlayerMoveComplete();
         }
 
         if (p.IsDestroyedOnMoveOn)
@@ -299,13 +250,12 @@ public class GameManager : MonoBehaviour {
     {
         PlayerCanMove = false;
 
-        SelectedPiece.Jump(destPiece);
+        SelectedPiece.Move(destPiece);
 
         if (overPiece.KillsPieceOnJumpOver || destPiece.KillsPieceOnLand)
         {
-            MovablePieces.Remove(SelectedPiece);
-            SelectedPiece.gameObject.SetActive(false);
-            SelectedPiece = null;
+            RemoveMovablePiece(SelectedPiece);
+            OnPlayerMoveComplete();
         }
 
         if (overPiece.IsDestroyedOnJumpOver)
@@ -322,110 +272,7 @@ public class GameManager : MonoBehaviour {
             boardScript.AddTile(boardScript.EmptyPiece, destPiece.Row, destPiece.Column);
         }
     }
-
-    //public void MoveCurrentPiece(Direction dir)
-    //{
-    //    if (SelectedPiece == null)//no piece selected, can't process move
-    //        return;
-
-    //    PlayerCanMove = false;//stop accepting new moves while evaluate last
-
-    //    int moveRows = 0;//num rows/cols to move/jump
-    //    int moveCols = 0;
-
-    //    int jumpRows = 0;
-    //    int jumpCols = 0;
-
-    //    switch (dir)//fill in move based on direction
-    //    {
-    //        case Direction.Up:
-    //            moveRows = -1;
-    //            jumpRows = -2;
-    //            break;
-    //        case Direction.Down:
-    //            moveRows = 1;
-    //            jumpRows = 2;
-    //            break;
-    //        case Direction.Left:
-    //            moveCols = -1;
-    //            jumpCols = -2;
-    //            break;
-    //        case Direction.Right:
-    //            moveCols = 1;
-    //            jumpCols = 2;
-    //            break;
-    //        default:
-    //            return;
-    //    }
-
-    //    //get position of piece after moving/jumping in given direction
-    //    int endMoveRow = SelectedPiece.Row + moveRows;
-    //    int endMoveCol = SelectedPiece.Column + moveCols;
-    //    int endJumpRow = SelectedPiece.Row + jumpRows;
-    //    int endJumpCol = SelectedPiece.Column + jumpCols;
-
-    //    //would moving/jumping in given direction move the piece outside of the board?
-    //    bool canMove = endMoveRow >= 0 && endMoveRow <= Board.GetUpperBound(0) && endMoveCol >= 0 && endMoveCol <= Board.GetUpperBound(1);
-    //    bool canJump = endJumpRow >= 0 && endJumpRow <= Board.GetUpperBound(0) && endJumpCol >= 0 && endJumpCol <= Board.GetUpperBound(1);
-
-    //    bool isMovingPieceOnMove = MovablePieces.Any(m => m.Column == endMoveCol && m.Row == endMoveRow);
-    //    bool isMovingPieceOnJump = MovablePieces.Any(m => m.Column == endJumpCol && m.Row == endJumpRow);
-
-    //    //piece to be landed on after move/jump
-    //    TilePiece movePiece = canMove ? Board[endMoveRow, endMoveCol] : null;
-    //    TilePiece jumpPiece = canJump ? Board[endJumpRow, endJumpCol] : null;
-
-    //    if (canMove && !isMovingPieceOnMove && movePiece.CanBeLandedOn)//do a move if not out of bounds, no moving place already there
-    //    {
-    //        SelectedPiece.Move(moveRows, moveCols);
-
-    //        if (movePiece.KillsPieceOnLand)
-    //        {
-    //            MovablePieces.Remove(SelectedPiece);
-    //            SelectedPiece.gameObject.SetActive(false);
-    //            SelectedPiece = null;
-    //        }
-
-    //        if(movePiece.IsDestroyedOnMoveOn)
-    //        {
-    //            movePiece.gameObject.SetActive(false);
-    //            Board[endMoveRow, endMoveCol] = null;
-    //            boardScript.AddTile(boardScript.EmptyPiece, endMoveRow, endMoveCol);
-    //        }
-    //    }
-    //    else if(canJump && (movePiece.CanBeJumpedOver || isMovingPieceOnMove) && !isMovingPieceOnJump && jumpPiece.CanBeLandedOn)//do a jump
-    //    {
-    //        SelectedPiece.Jump(jumpRows, jumpCols);
-
-    //        if (movePiece.KillsPieceOnJumpOver || jumpPiece.KillsPieceOnLand)
-    //        {
-    //            MovablePieces.Remove(SelectedPiece);
-    //            SelectedPiece.gameObject.SetActive(false);
-    //            SelectedPiece = null;
-    //        }
-
-    //        if (movePiece.IsDestroyedOnJumpOver)
-    //        {
-    //            movePiece.gameObject.SetActive(false);
-    //            Board[endMoveRow, endMoveCol] = null;
-    //            boardScript.AddTile(boardScript.EmptyPiece, endMoveRow, endMoveCol);
-    //        }
-
-    //        if (jumpPiece.IsDestroyedOnMoveOn)
-    //        {
-    //            jumpPiece.gameObject.SetActive(false);
-    //            Board[endJumpRow, endJumpCol] = null;
-    //            boardScript.AddTile(boardScript.EmptyPiece, endJumpRow, endJumpCol);
-    //        }
-    //    }
-    //    else//no move happened
-    //    {
-    //        PlayerCanMove = true;
-    //        return;
-    //    }
-
-    //    //OnPlayerMoveComplete();
-    //}
+    
 
     public void OnPlayerMoveComplete()
     {
@@ -481,17 +328,19 @@ public class GameManager : MonoBehaviour {
 
 /* TODO
  * ==========
- * -Handle end of move check better, currently if kill player end of turn doesn't get evaluated (bit messy)
+ * -Add loading colour of destination and movables from Level file in board manager
+ * -Add redirect vector from level to gameobject in board manager
+ * -Add game over event
+ * -Create level files x 10
+ * -Load level correctly from file
+ * 
+ * -On move flashs "Not valid" check move logic, still messy
  * -Game manager becoming too bloated, sort of concerns between GM and boardmanager, what do they do?
  * -Build test boards to check
- * -Load from file (figure out level loading)
  */
 
 //New Structure....
 /*
- * Redirect
- *      Rotate Tile
+
  * 
- * Change input, each tile has properties e.g. direct direction, has moving player on it, colour of tile
- * MovingPiece inherits from TilePiece?
  */
