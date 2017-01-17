@@ -335,12 +335,51 @@ public class GameManager : MonoBehaviour {
  * -Load level correctly from file
  * 
  * -On move flashs "Not valid" check move logic, still messy
- * -Game manager becoming too bloated, sort of concerns between GM and boardmanager, what do they do?
  * -Build test boards to check
+ * -Add medal win conditions in level object, evaluate at game manager not board
  */
 
 //New Structure....
 /*
+    Movable Piece
+        - Add   Public bool IsSelected
+
+    Tile Piece - Added data to reduce moving logic at manager
+        - Add   Public MovablePiece MovingPiece
+                Public bool IsCompleted         (is destination and contains a moving piece of the same colour)
+                Public bool IsLandable          (now has movable so can full evaluate landability and leapability, reduced logic in managers)
+                Public bool IsJumpOverable
+                Public bool IsOnBoardEdge       (will need info about the current board, e.g. its dimensions, could make public static for all to see?)
+    
+    Board Manager - now handles both rendering and logic of this one particular board (could move rendering and inputListening to new objects)
+        - Takes Level input object as does currently, converts this to TilePiece[,] and keep internally instead of passing back to GameManager
+        - Handle moving objects
+        - Detects game win/lose, events for each
+        - Initialises and destroys all game objects
+        - Receives camera object, adjusts
+
+        public static BoardManager SetupBoard(Level lvl) - Static init
+        private TilePiece board[,]
+        public event GameWon
+        public event GameLost
+        public int MoveCount
+        private MovablePiece selectedPiece
+        private void EndTurn() - Checks win/lose conditions
+        private void MoveSelectedPiece(Vector v) - Straight from input so don't have to translate enum, works out moving vector, calls mp.Move() then moves the piece object to inside the destination tile object
+        private void ChangeSelectedPiece(MovablePiece mp)
+
+
+
+    
+    Game Manager - will handle everything outside of the current board configuration
+        - Choosing level, get level config object, setup new board, listen to game finished events
+        - Gather and save game results
+        - Bring up UI menus
+        - Starts new level
+        - Inputs listened for here???
+
+    Not confident on Listening, put in GameManager / BoardManager / InputListener (new)??
+
 
  * 
  */
