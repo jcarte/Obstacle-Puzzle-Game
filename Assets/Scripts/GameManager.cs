@@ -349,7 +349,7 @@ public class GameManager : MonoBehaviour {
                 Public bool IsCompleted         (is destination and contains a moving piece of the same colour)
                 Public bool IsLandable          (now has movable so can full evaluate landability and leapability, reduced logic in managers)
                 Public bool IsJumpOverable
-                Public bool IsOnBoardEdge       (will need info about the current board, e.g. its dimensions, could make public static for all to see?)
+                ????Public bool IsOnBoardEdge       (will need info about the current board, e.g. its dimensions, could make public static for all to see?)
     
     Board Manager - now handles both rendering and logic of this one particular board (could move rendering and inputListening to new objects)
         - Takes Level input object as does currently, converts this to TilePiece[,] and keep internally instead of passing back to GameManager

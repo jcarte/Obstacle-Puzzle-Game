@@ -10,12 +10,13 @@ public class MovablePiece : BasePiece
     public float moveTime = 0.1f;			//Time it will take object to move, in seconds.
     private float inverseMoveTime;          //Used to make movement more efficient.
 
-    
-
+    [HideInInspector]
+    public bool IsSelected = false;
 
 
     public event EventHandler MovementCompleted;
     public event EventHandler Clicked;
+
 
     public bool IsMoving { get; private set; }
 

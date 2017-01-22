@@ -2,36 +2,55 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 public class BoardManager : MonoBehaviour {
 
     //Templates
-    public GameObject[] MovablePieces;          //1-10
-    public GameObject[] DestinationPieces;      //101-110
-    public GameObject EmptyPiece;               //0
-    public GameObject LandingPiece;             //1
-    public GameObject NonLandingPiece;          //2
-    public GameObject ObstaclePiece;            //3
-    public GameObject RedirectPiece;            //4
-    public GameObject EnemyPiece;               //5
-    public GameObject DisappearingPiece;        //6
-    public GameObject FakeDisappearingPiece;    //7
+    //public GameObject[] MovablePieces;
+    //public GameObject[] DestinationPieces;
+
+    public GameObject MovablePiece_Red;
+    public GameObject MovablePiece_Yellow;
+    public GameObject MovablePiece_Blue;
+    public GameObject MovablePiece_Green;
+
+    public GameObject DestinationPiece_Red;
+    public GameObject DestinationPiece_Yellow;
+    public GameObject DestinationPiece_Blue;
+    public GameObject DestinationPiece_Green;
+
+
+    public GameObject EmptyPiece;
+    public GameObject LandingPiece;
+    public GameObject NonLandingPiece;
+    public GameObject ObstaclePiece;
+    public GameObject RedirectPiece;
+    public GameObject EnemyPiece;
+    public GameObject DisappearingPiece;
+    public GameObject FakeDisappearingPiece;
 
 
 
-    //public int NumberOfRows { get; private set; }
-    //public int NumberOfColumns { get; private set; }
+    public int NumberOfRows { get; private set; }
+    public int NumberOfColumns { get; private set; }
 
     private Level lvl;
 
+    private TilePiece[,] board;
 
     public void SetupBoard(Level lv)
     {
         lvl = lv;
 
-        for (int r = 0; r < lvl.RowCount; r++)
+        NumberOfRows = lvl.RowCount;
+        NumberOfColumns = lvl.ColumnCount;
+        board = new TilePiece[NumberOfRows, NumberOfColumns];
+
+
+        for (int r = 0; r < NumberOfRows; r++)
         {
-            for (int c = 0; c < lvl.ColumnCount; c++)
+            for (int c = 0; c < NumberOfColumns; c++)
             {
                 Level.Cell ce = lvl.Array[r].Cells[c];
 
@@ -61,159 +80,143 @@ public class BoardManager : MonoBehaviour {
                         go = FakeDisappearingPiece;
                         break;
                     case Level.TileType.Destination:
-                        go = DestinationPieces[0];//TODO colour fix
+                        switch (ce.Tile.Colour)
+                        {
+                            case Level.ColourType.Red:
+                                go = DestinationPiece_Red;
+                                break;
+                            case Level.ColourType.Yellow:
+                                go = DestinationPiece_Yellow;
+                                break;
+                            case Level.ColourType.Blue:
+                                go = DestinationPiece_Blue;
+                                break;
+                            case Level.ColourType.Green:
+                                go = DestinationPiece_Green;
+                                break;
+                            default:
+                                throw new System.Exception("Unknown Tile Colour Type");
+                        }
                         break;
                     case Level.TileType.Redirect:
-                        go = RedirectPiece;//TODO add redirect vector
+                        go = RedirectPiece;
                         break;
                 }
+                
+                //AddTile(go, r, c);
+                TilePiece tp = ((GameObject)Instantiate(go, new Vector3(c, -r, 0f), Quaternion.identity)).GetComponent<TilePiece>();
 
-                AddTile(go, r, c);
+                if(ce.Tile.Type == Level.TileType.Redirect)
+                {
+                    tp.RedirectColumnOffset = ce.Tile.Redirect.ColumnOffset;
+                    tp.RedirectRowOffset = ce.Tile.Redirect.RowOffset;
+                }
+
 
                 if (ce.Movable != null)
                 {
-                    GameObject mgo = MovablePieces[0];//TODO colour fix;
-                    AddTile(mgo, r, c);
+                    GameObject mgo;
+
+                    switch (ce.Movable.Colour)
+                    {
+                        case Level.ColourType.Red:
+                            mgo = MovablePiece_Red;
+                            break;
+                        case Level.ColourType.Yellow:
+                            mgo = MovablePiece_Yellow;
+                            break;
+                        case Level.ColourType.Blue:
+                            mgo = MovablePiece_Blue;
+                            break;
+                        case Level.ColourType.Green:
+                            mgo = MovablePiece_Green;
+                            break;
+                        default:
+                            throw new System.Exception("Unknown Tile Colour Type");
+                    }
+
+                    //AddTile(mgo, r, c);
+                    MovablePiece mp = ((GameObject)Instantiate(mgo, new Vector3(c, -r, 0f), Quaternion.identity)).GetComponent<MovablePiece>();
+                    tp.MovingPiece = mp;
                 }
+
+                board[r, c] = tp;
 
             }
         }
     }
 
-    //public void SetupBoard(byte[,] tiles, byte[,] movables)
-    //{
-        
 
-    //    List<GameObject> normPieces = new List<GameObject>()
-    //    { EmptyPiece, LandingPiece, NonLandingPiece, ObstaclePiece, RedirectPiece,EnemyPiece,DisappearingPiece,FakeDisappearingPiece};
+    public event EventHandler GameWon;
+    public event EventHandler GameLost;
 
-    //    for (int r = 0; r <= tiles.GetUpperBound(0); r++)
-    //    {
-    //        for (int c = 0; c <= tiles.GetUpperBound(1); c++)
-    //        {
-    //            byte tId = tiles[r, c];//TODO add check on id, more exceptions etc
-    //            GameObject t;
-    //            if (tId < 8)
-    //                t = normPieces[tId];
-                
-    //            else if (tId >= 101 && tId <= 110)
-    //                t = DestinationPieces[tId - 101];
-    //            else
-    //                throw new System.Exception("Config Parsing Error, Unrecognised ID");
+    [HideInInspector]
+    public int MoveCount = 0;
 
-    //            //Instantiate(t, new Vector3(c, -r, 0f), Quaternion.identity);
-    //            AddTile(t, r, c);
+    private MovablePiece selectedPiece;
 
-    //            //Do movables
-    //            byte mId = movables[r, c];
-    //            if (mId > 0)
-    //            {
-    //                GameObject mT = MovablePieces[mId - 1];
-    //                //Instantiate(mT, new Vector3(c, -r, 0f), Quaternion.identity);
-    //                AddTile(mT, r, c);
-    //            }
-                
-
-    //        }
-    //    }
-
-    //}
-    
-
-    public void AddTile(GameObject go, int row, int col)
+    private void EndTurn()
     {
-        Instantiate(go, new Vector3(col, -row, 0f), Quaternion.identity);
+        List<TilePiece> boardList = board.Cast<TilePiece>().ToList();
+
+        //check if the game has won, if all destinations have been completed
+        if(!boardList.Any(t => t.IsDestination && !t.IsCompleted))
+        {
+            if (GameWon != null)
+                GameWon.Invoke(this, null);
+            return;
+        }
+
+        int movePieceCount = boardList.Count(p => p.HasMovingPiece);
+        int destinationCount = boardList.Count(p => p.IsDestination);
+
+        //check if game lost, if there are less moving pieces than destinations
+        if (movePieceCount < destinationCount)
+        {
+            if (GameLost != null)
+                GameLost.Invoke(this, null);
+            return;
+        }
+
+
+
     }
 
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        //If it's not the player's turn, exit the function.
-        if (!GameManager.Instance.PlayerCanMove) return;
 
-        int horizontal = 0;     //Used to store the horizontal move direction.
-        int vertical = 0;       //Used to store the vertical move direction.
+    public void MoveSelectedPiece(int rowOffset, int colOffset)
+    {
+        if (selectedPiece == null)
+            return;
 
-        //Check if we are running either in the Unity editor or in a standalone build.
-#if UNITY_STANDALONE || UNITY_WEBPLAYER
+        int dRow = selectedPiece.Row + rowOffset;
+        int dCol = selectedPiece.Column + colOffset;
 
-        //Get input from the input manager, round it to an integer and store in horizontal to set x axis move direction
-        horizontal = (int)(Input.GetAxisRaw("Horizontal"));
+        //check if valid move
+        TilePiece destP = GetTile(dRow, dCol);
+        if (destP == null)
+            return;
 
-        //Get input from the input manager, round it to an integer and store in vertical to set y axis move direction
-        vertical = (int)(Input.GetAxisRaw("Vertical"));
-
-        
-
-        //Check if moving horizontally, if so set vertical to zero.
-        if (horizontal != 0)
-        {
-            vertical = 0;
-        }
-        //Check if we are running on iOS, Android, Windows Phone 8 or Unity iPhone
-#elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
-			
-			//Check if Input has registered more than zero touches
-			if (Input.touchCount > 0)
-			{
-				//Store the first touch detected.
-				Touch myTouch = Input.touches[0];
-				
-				//Check if the phase of that touch equals Began
-				if (myTouch.phase == TouchPhase.Began)
-				{
-					//If so, set touchOrigin to the position of that touch
-					touchOrigin = myTouch.position;
-				}
-				
-				//If the touch phase is not Began, and instead is equal to Ended and the x of touchOrigin is greater or equal to zero:
-				else if (myTouch.phase == TouchPhase.Ended && touchOrigin.x >= 0)
-				{
-					//Set touchEnd to equal the position of this touch
-					Vector2 touchEnd = myTouch.position;
-					
-					//Calculate the difference between the beginning and end of the touch on the x axis.
-					float x = touchEnd.x - touchOrigin.x;
-					
-					//Calculate the difference between the beginning and end of the touch on the y axis.
-					float y = touchEnd.y - touchOrigin.y;
-					
-					//Set touchOrigin.x to -1 so that our else if statement will evaluate false and not repeat immediately.
-					touchOrigin.x = -1;
-					
-					//Check if the difference along the x axis is greater than the difference along the y axis.
-					if (Mathf.Abs(x) > Mathf.Abs(y))
-						//If x is greater than zero, set horizontal to 1, otherwise set it to -1
-						horizontal = x > 0 ? 1 : -1;
-					else
-						//If y is greater than zero, set horizontal to 1, otherwise set it to -1
-						vertical = y > 0 ? 1 : -1;
-				}
-			}
-			
-#endif 
-        //End of mobile platform dependendent compilation section started above with #elif
-        //Check if we have a non-zero value for horizontal or vertical
-        if (horizontal != 0 || vertical != 0)
+        if(destP.IsLandable)
         {
 
-            //vertically down (-1) means increase row number (+1)
-            //Debug.Log("Input: " + horizontal + "," + -vertical);
-            //GameManager.Instance.MoveCurrentPiece(horizontal, -vertical);
-
-            if (horizontal > 0)
-                GameManager.Instance.MoveCurrentPiece(GameManager.Direction.Right);
-            else if (horizontal < 0)
-                GameManager.Instance.MoveCurrentPiece(GameManager.Direction.Left);
-            else if (vertical > 0)
-                GameManager.Instance.MoveCurrentPiece(GameManager.Direction.Up);
-            else if (vertical < 0)
-                GameManager.Instance.MoveCurrentPiece(GameManager.Direction.Down);
         }
+        else if(destP.IsRedirector)
+        {
+
+        }
+        else if(destP.CanBeJumpedOver)
+        {
+            
+        }
+    }
+
+
+    private TilePiece GetTile(int r, int c)
+    {
+        if (r < 0 || r >= NumberOfRows || c < 0 || c >= NumberOfColumns)
+            return null;
+
+        return board[r, c];
     }
 }
