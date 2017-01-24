@@ -12,15 +12,15 @@ public class GameManager : MonoBehaviour {
 
     public static GameManager Instance = null;
 
-    [HideInInspector]
-    public bool PlayerCanMove;
+    //[HideInInspector]
+    //public bool PlayerCanMove;
 
-    public int MoveCount { get; private set; }
+    //public int MoveCount { get; private set; }
 
-    public TilePiece[,] Board;
+    //public TilePiece[,] Board;
 
-    public List<MovablePiece> MovablePieces;
-    public MovablePiece SelectedPiece;
+    //public List<MovablePiece> MovablePieces;
+    //public MovablePiece SelectedPiece;
 
     
 
@@ -49,12 +49,8 @@ public class GameManager : MonoBehaviour {
 
     //TODO check game won
 
-
     private void InitGame()
     {
-        MoveCount = 0;
-        MovablePieces = new List<MovablePiece>();
-
         Level v1 = Level.Create(4, 5);
 
         for (int r = 0; r < v1.RowCount; r++)
@@ -62,14 +58,14 @@ public class GameManager : MonoBehaviour {
             for (int c = 0; c < v1.ColumnCount; c++)
             {
                 v1.ChangeTile(r, c, Level.TileType.Landing);
-                
+
             }
         }
 
         v1.AddMovable(1, 1, Level.ColourType.Blue);
         v1.AddMovable(2, 2, Level.ColourType.Red);
-        v1.ChangeTile(0, 2,Level.TileType.Disappearing);
-        v1.ChangeTile(3, 3,Level.TileType.Destination,Level.ColourType.Blue);
+        v1.ChangeTile(0, 2, Level.TileType.Disappearing);
+        v1.ChangeTile(3, 3, Level.TileType.Destination, Level.ColourType.Blue);
 
 
         //v1.ChangeTile(0, 0, Level.TileType.Disappearing);
@@ -91,7 +87,6 @@ public class GameManager : MonoBehaviour {
         //Level lvl = LevelManager.RestoreLevel(path);
         Level lvl = v1;
 
-        Board = new TilePiece[lvl.RowCount, lvl.ColumnCount];
         boardScript = GetComponent<BoardManager>();
         boardScript.SetupBoard(lvl);
 
@@ -100,222 +95,276 @@ public class GameManager : MonoBehaviour {
 
         Camera cam = GameObject.Find("Main Camera").GetComponent<Camera>();
         cam.transform.position = new Vector3(width * 0.5f, height * -0.5f, -10f);
-        cam.orthographicSize = Math.Max((width +1)/ 2, (height +1) / 2);
+        cam.orthographicSize = Math.Max((width + 1) / 2, (height + 1) / 2);
 
-        PlayerCanMove = true;
     }
 
-    public void AddMovablePiece(MovablePiece mp)
-    {
-        MovablePieces.Add(mp);
-        mp.MovementCompleted += (s, e) => OnPlayerMoveComplete();
-        mp.Clicked += (s, e) => MovablePieceSelected(s as MovablePiece);
+    //private void InitGame()
+    //{
+    //    MoveCount = 0;
+    //    MovablePieces = new List<MovablePiece>();
 
-        //TODO delete
-        //SelectedPiece = mp;
-    }
+    //    Level v1 = Level.Create(4, 5);
 
-    public void RemoveMovablePiece(MovablePiece mp)
-    {
-        mp.MovementCompleted -= (s, e) => OnPlayerMoveComplete();
+    //    for (int r = 0; r < v1.RowCount; r++)
+    //    {
+    //        for (int c = 0; c < v1.ColumnCount; c++)
+    //        {
+    //            v1.ChangeTile(r, c, Level.TileType.Landing);
+                
+    //        }
+    //    }
 
-        if (SelectedPiece == mp)
-            SelectedPiece = null;
-        MovablePieces.Remove(mp);
-        mp.gameObject.SetActive(false);
-        //OnPlayerMoveComplete();
-    }
+    //    v1.AddMovable(1, 1, Level.ColourType.Blue);
+    //    v1.AddMovable(2, 2, Level.ColourType.Red);
+    //    v1.ChangeTile(0, 2,Level.TileType.Disappearing);
+    //    v1.ChangeTile(3, 3,Level.TileType.Destination,Level.ColourType.Blue);
+
+
+    //    //v1.ChangeTile(0, 0, Level.TileType.Disappearing);
+    //    //v1.ChangeTile(0, 1, Level.TileType.Enemy);
+    //    //v1.ChangeTile(0, 2, Level.TileType.FakeDisappearing);
+    //    //v1.ChangeTile(0, 3, Level.TileType.NonLanding);
+    //    //v1.ChangeTile(0, 4, Level.TileType.Obstacle);
+    //    //v1.ChangeTile(1, 0, Level.TileType.Redirect, 2, 2);
+    //    //v1.ChangeTile(1, 1, Level.TileType.Landing);
+    //    //v1.ChangeTile(1, 2, Level.TileType.Landing);
+    //    //v1.ChangeTile(1, 3, Level.TileType.Landing);
+    //    //v1.ChangeTile(2, 3, Level.TileType.Destination, Level.ColourType.Red);
+    //    //v1.AddMovable(1, 1, Level.ColourType.Red);
+
+
+    //    //string path = "Levels\\Level1.DAT";
+    //    //LevelManager.SaveLevel(v1, path);
+
+    //    //Level lvl = LevelManager.RestoreLevel(path);
+    //    Level lvl = v1;
+
+    //    Board = new TilePiece[lvl.RowCount, lvl.ColumnCount];
+    //    boardScript = GetComponent<BoardManager>();
+    //    boardScript.SetupBoard(lvl);
+
+    //    float width = lvl.ColumnCount;
+    //    float height = lvl.RowCount;
+
+    //    Camera cam = GameObject.Find("Main Camera").GetComponent<Camera>();
+    //    cam.transform.position = new Vector3(width * 0.5f, height * -0.5f, -10f);
+    //    cam.orthographicSize = Math.Max((width +1)/ 2, (height +1) / 2);
+
+    //    PlayerCanMove = true;
+    //}
+
+    //public void AddMovablePiece(MovablePiece mp)
+    //{
+    //    MovablePieces.Add(mp);
+    //    mp.MovementCompleted += (s, e) => OnPlayerMoveComplete();
+    //    mp.Clicked += (s, e) => MovablePieceSelected(s as MovablePiece);
+
+    //    //TODO delete
+    //    //SelectedPiece = mp;
+    //}
+
+    //public void RemoveMovablePiece(MovablePiece mp)
+    //{
+    //    mp.MovementCompleted -= (s, e) => OnPlayerMoveComplete();
+
+    //    if (SelectedPiece == mp)
+    //        SelectedPiece = null;
+    //    MovablePieces.Remove(mp);
+    //    mp.gameObject.SetActive(false);
+    //    //OnPlayerMoveComplete();
+    //}
 
     
-    public void MovablePieceSelected(MovablePiece mp)
-    {
-        if(mp!=null && MovablePieces.Contains(mp))
-        {
-            Debug.Log("New selected Movable Piece");
-            SelectedPiece = mp;
-        }
+    //public void MovablePieceSelected(MovablePiece mp)
+    //{
+    //    if(mp!=null && MovablePieces.Contains(mp))
+    //    {
+    //        Debug.Log("New selected Movable Piece");
+    //        SelectedPiece = mp;
+    //    }
             
-    }
+    //}
 
-    public void AddTilePiece(TilePiece tp)
-    {
-        //Debug.Log(tp.transform.position.x + ", " + tp.transform.position.y);
-        int c = (int)Math.Round(tp.transform.position.x,0);
-        int r = (int)Math.Round(-tp.transform.position.y, 0);
-        Board[r, c] = tp;
-    }
+    //public void AddTilePiece(TilePiece tp)
+    //{
+    //    //Debug.Log(tp.transform.position.x + ", " + tp.transform.position.y);
+    //    int c = (int)Math.Round(tp.transform.position.x,0);
+    //    int r = (int)Math.Round(-tp.transform.position.y, 0);
+    //    Board[r, c] = tp;
+    //}
 
 
-    public void ChangeSelectedPiece(MovablePiece mp)
-    {
-        SelectedPiece = MovablePieces.FirstOrDefault(m => m == mp);
-    }
+    //public void ChangeSelectedPiece(MovablePiece mp)
+    //{
+    //    SelectedPiece = MovablePieces.FirstOrDefault(m => m == mp);
+    //}
 
 
     //TODO needed?
-    public enum Direction
-    {
-        Up, Down, Left, Right
-    }
+    //public enum Direction
+    //{
+    //    Up, Down, Left, Right
+    //}
 
-    //TODO package r/c together in struct?
-    private TilePiece GetTilePiece(int row, int col)
-    {
-        //is inside board
-        if(row >= 0 && row <= Board.GetUpperBound(0) && col >= 0 && col <= Board.GetUpperBound(1))
-            return Board[row, col];
-        else
-            return null;
-    }
+    ////TODO package r/c together in struct?
+    //private TilePiece GetTilePiece(int row, int col)
+    //{
+    //    //is inside board
+    //    if(row >= 0 && row <= Board.GetUpperBound(0) && col >= 0 && col <= Board.GetUpperBound(1))
+    //        return Board[row, col];
+    //    else
+    //        return null;
+    //}
 
 
-    public void MoveCurrentPiece(Direction dir)
-    {
-        if (SelectedPiece == null)//no piece selected, can't process move
-            return;
+    //public void MoveCurrentPiece(Direction dir)
+    //{
+    //    if (SelectedPiece == null)//no piece selected, can't process move
+    //        return;
 
-        int dRow = 0;
-        int dCol = 0;
+    //    int dRow = 0;
+    //    int dCol = 0;
 
-        if (dir == Direction.Up)
-            dRow = -1;
-        else if (dir == Direction.Down)
-            dRow = 1;
-        else if (dir == Direction.Left)
-            dCol = -1;
-        else if (dir == Direction.Right)
-            dCol = 1;
+    //    if (dir == Direction.Up)
+    //        dRow = -1;
+    //    else if (dir == Direction.Down)
+    //        dRow = 1;
+    //    else if (dir == Direction.Left)
+    //        dCol = -1;
+    //    else if (dir == Direction.Right)
+    //        dCol = 1;
 
-        TilePiece t = GetTilePiece(SelectedPiece.Row + dRow, SelectedPiece.Column + dCol);
+    //    TilePiece t = GetTilePiece(SelectedPiece.Row + dRow, SelectedPiece.Column + dCol);
 
-        if (t == null)
-            return;//not valid move
+    //    if (t == null)
+    //        return;//not valid move
 
         
 
-        if (t.IsRedirector)
-        {
-            Debug.Log("IsRedirect");
-            int rowDest = t.Row - (int)Math.Round(t.RedirectDirection.y,0);
-            int colDest = t.Column + (int)Math.Round(t.RedirectDirection.x,0);
+    //    if (t.IsRedirector)
+    //    {
+    //        Debug.Log("IsRedirect");
+    //        int rowDest = t.Row - (int)Math.Round(t.RedirectDirection.y,0);
+    //        int colDest = t.Column + (int)Math.Round(t.RedirectDirection.x,0);
 
             
-            TilePiece destT = GetTilePiece(rowDest, colDest);
-            Debug.Log((destT != null) + "  " + (destT.CanBeLandedOn) + "  " + (!destT.HasMovableOnIt) + "  FROM " + t.Row + " " + t.Column + "     TO " + rowDest + " " + colDest);
-            if (destT !=null && destT.CanBeLandedOn && !destT.HasMovableOnIt)
-            {
-                //MoveToPiece(t);//TODO fix broken because of coroutine
-                MoveToPiece(destT);
-            }
-        }
-        else if(t.CanBeLandedOn && !t.HasMovableOnIt)
-        {
-            Debug.Log("Single Move");
-            MoveToPiece(t);
-        }
-        else if(t.CanBeJumpedOver)//Check Jumping
-        {
-            Debug.Log("Attempt Jump");
-            TilePiece j = GetTilePiece(SelectedPiece.Row + (2*dRow), SelectedPiece.Column + (2*dCol));
-            if (j != null && j.CanBeLandedOn && !j.HasMovableOnIt)
-                JumpToPiece(t,j);
-        }
+    //        TilePiece destT = GetTilePiece(rowDest, colDest);
+    //        Debug.Log((destT != null) + "  " + (destT.CanBeLandedOn) + "  " + (!destT.HasMovableOnIt) + "  FROM " + t.Row + " " + t.Column + "     TO " + rowDest + " " + colDest);
+    //        if (destT !=null && destT.CanBeLandedOn && !destT.HasMovableOnIt)
+    //        {
+    //            //MoveToPiece(t);//TODO fix broken because of coroutine
+    //            MoveToPiece(destT);
+    //        }
+    //    }
+    //    else if(t.CanBeLandedOn && !t.HasMovableOnIt)
+    //    {
+    //        Debug.Log("Single Move");
+    //        MoveToPiece(t);
+    //    }
+    //    else if(t.CanBeJumpedOver)//Check Jumping
+    //    {
+    //        Debug.Log("Attempt Jump");
+    //        TilePiece j = GetTilePiece(SelectedPiece.Row + (2*dRow), SelectedPiece.Column + (2*dCol));
+    //        if (j != null && j.CanBeLandedOn && !j.HasMovableOnIt)
+    //            JumpToPiece(t,j);
+    //    }
 
-        Debug.Log("Not valid");
-    }
+    //    Debug.Log("Not valid");
+    //}
 
 
-    private void MoveToPiece(TilePiece p)
-    {
-        PlayerCanMove = false;
+    //private void MoveToPiece(TilePiece p)
+    //{
+    //    PlayerCanMove = false;
 
-        SelectedPiece.Move(p);
+    //    SelectedPiece.Move(p);
 
-        if (p.KillsPieceOnLand)
-        {
-            RemoveMovablePiece(SelectedPiece);
-            OnPlayerMoveComplete();
-        }
+    //    if (p.KillsPieceOnLand)
+    //    {
+    //        RemoveMovablePiece(SelectedPiece);
+    //        OnPlayerMoveComplete();
+    //    }
 
-        if (p.IsDestroyedOnMoveOn)
-        {
-            p.gameObject.SetActive(false);
-            Board[p.Row, p.Column] = null;
-            boardScript.AddTile(boardScript.EmptyPiece, p.Row, p.Column);
-        }
+    //    if (p.IsDestroyedOnMoveOn)
+    //    {
+    //        p.gameObject.SetActive(false);
+    //        Board[p.Row, p.Column] = null;
+    //        boardScript.AddTile(boardScript.EmptyPiece, p.Row, p.Column);
+    //    }
 
-    }
+    //}
 
-    private void JumpToPiece(TilePiece overPiece, TilePiece destPiece)
-    {
-        PlayerCanMove = false;
+    //private void JumpToPiece(TilePiece overPiece, TilePiece destPiece)
+    //{
+    //    PlayerCanMove = false;
 
-        SelectedPiece.Move(destPiece);
+    //    SelectedPiece.Move(destPiece);
 
-        if (overPiece.KillsPieceOnJumpOver || destPiece.KillsPieceOnLand)
-        {
-            RemoveMovablePiece(SelectedPiece);
-            OnPlayerMoveComplete();
-        }
+    //    if (overPiece.KillsPieceOnJumpOver || destPiece.KillsPieceOnLand)
+    //    {
+    //        RemoveMovablePiece(SelectedPiece);
+    //        OnPlayerMoveComplete();
+    //    }
 
-        if (overPiece.IsDestroyedOnJumpOver)
-        {
-            overPiece.gameObject.SetActive(false);
-            Board[overPiece.Row, overPiece.Column] = null;
-            boardScript.AddTile(boardScript.EmptyPiece, overPiece.Row, overPiece.Column);
-        }
+    //    if (overPiece.IsDestroyedOnJumpOver)
+    //    {
+    //        overPiece.gameObject.SetActive(false);
+    //        Board[overPiece.Row, overPiece.Column] = null;
+    //        boardScript.AddTile(boardScript.EmptyPiece, overPiece.Row, overPiece.Column);
+    //    }
 
-        if (destPiece.IsDestroyedOnMoveOn)
-        {
-            destPiece.gameObject.SetActive(false);
-            Board[destPiece.Row, destPiece.Column] = null;
-            boardScript.AddTile(boardScript.EmptyPiece, destPiece.Row, destPiece.Column);
-        }
-    }
+    //    if (destPiece.IsDestroyedOnMoveOn)
+    //    {
+    //        destPiece.gameObject.SetActive(false);
+    //        Board[destPiece.Row, destPiece.Column] = null;
+    //        boardScript.AddTile(boardScript.EmptyPiece, destPiece.Row, destPiece.Column);
+    //    }
+    //}
     
 
-    public void OnPlayerMoveComplete()
-    {
-        Debug.Log("End of Turn");
+    //public void OnPlayerMoveComplete()
+    //{
+    //    Debug.Log("End of Turn");
         
-        MoveCount++;
+    //    MoveCount++;
 
-        int destinationCount = 0;//TODO create stats breakdown by colour
-        int filledDestinations = 0;
-        int movingPieceCount = MovablePieces.Count;
+    //    int destinationCount = 0;//TODO create stats breakdown by colour
+    //    int filledDestinations = 0;
+    //    int movingPieceCount = MovablePieces.Count;
          
-        for (int r = 0; r <= Board.GetUpperBound(0); r++)
-        {
-            for (int c = 0; c <= Board.GetUpperBound(1); c++)
-            {
-                var t = Board[r, c];
-                if(t.IsDestination)
-                {
-                    destinationCount++;
-                    MovablePiece mp = MovablePieces.FirstOrDefault(m => m.Column == c && m.Row == r);
-                    if (mp != null && mp.PieceColour == t.PieceColour)
-                        filledDestinations++;
-                }
-            }
-        }
+    //    for (int r = 0; r <= Board.GetUpperBound(0); r++)
+    //    {
+    //        for (int c = 0; c <= Board.GetUpperBound(1); c++)
+    //        {
+    //            var t = Board[r, c];
+    //            if(t.IsDestination)
+    //            {
+    //                destinationCount++;
+    //                MovablePiece mp = MovablePieces.FirstOrDefault(m => m.Column == c && m.Row == r);
+    //                if (mp != null && mp.PieceColour == t.PieceColour)
+    //                    filledDestinations++;
+    //            }
+    //        }
+    //    }
 
-        //Check if won
-        if (destinationCount == filledDestinations)
-        {
-            Debug.Log("GAME WON! " + MoveCount);//TODO bring up UI
-            return;
-        }
+    //    //Check if won
+    //    if (destinationCount == filledDestinations)
+    //    {
+    //        Debug.Log("GAME WON! " + MoveCount);//TODO bring up UI
+    //        return;
+    //    }
         
 
-        if (destinationCount > movingPieceCount)
-        {
-            Debug.Log("GAME LOST " + MoveCount);//TODO bring up UI, could determine this for each colour
-            return;
-        }
+    //    if (destinationCount > movingPieceCount)
+    //    {
+    //        Debug.Log("GAME LOST " + MoveCount);//TODO bring up UI, could determine this for each colour
+    //        return;
+    //    }
 
-        PlayerCanMove = true;
+    //    PlayerCanMove = true;
 
-    }
+    //}
 
 
     // Update is called once per frame

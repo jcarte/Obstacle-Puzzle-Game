@@ -31,6 +31,7 @@ public class BoardManager : MonoBehaviour {
     public GameObject FakeDisappearingPiece;
 
 
+    public InputListener Inputs { get; private set; }
 
     public int NumberOfRows { get; private set; }
     public int NumberOfColumns { get; private set; }
@@ -39,6 +40,7 @@ public class BoardManager : MonoBehaviour {
 
     private TilePiece[,] board;
 
+    //TODO make static / move to factory class
     public void SetupBoard(Level lv)
     {
         lvl = lv;
@@ -47,6 +49,10 @@ public class BoardManager : MonoBehaviour {
         NumberOfColumns = lvl.ColumnCount;
         board = new TilePiece[NumberOfRows, NumberOfColumns];
 
+        //Rubbish
+        Inputs = ((GameObject)Instantiate(new GameObject(), new Vector3(0f, 0f, 0f), Quaternion.identity)).GetComponent<InputListener>();
+
+        
 
         for (int r = 0; r < NumberOfRows; r++)
         {
@@ -137,15 +143,48 @@ public class BoardManager : MonoBehaviour {
 
                     //AddTile(mgo, r, c);
                     MovablePiece mp = ((GameObject)Instantiate(mgo, new Vector3(c, -r, 0f), Quaternion.identity)).GetComponent<MovablePiece>();
-                    tp.MovingPiece = mp;
+                    mp.Move(tp);
+                    mp.Clicked +=(s,e) => ChangeSelectedPiece(s as MovablePiece);
                 }
 
                 board[r, c] = tp;
 
             }
         }
+
+        Inputs.MoveUp += (s, e) => {
+            Inputs.StopListening();
+            if (!AttemptToMoveSelected(-1, 0))
+            { Inputs.StartListening(); }
+        };
+        Inputs.MoveDown += (s, e) => {
+            Inputs.StopListening();
+            if (!AttemptToMoveSelected(1, 0))
+            { Inputs.StartListening(); }
+        };
+        Inputs.MoveRight += (s, e) => {
+            Inputs.StopListening();
+            if (!AttemptToMoveSelected(0, 1))
+            { Inputs.StartListening(); }
+        };
+        Inputs.MoveLeft += (s, e) => {
+            Inputs.StopListening();
+            if (!AttemptToMoveSelected(0, -1))
+            { Inputs.StartListening(); }
+        };
+
+        Inputs.StartListening();
     }
 
+    private void ChangeSelectedPiece(MovablePiece m)
+    {
+        if(selectedPiece != null)
+            selectedPiece.MovementCompleted -= (s, e) => Inputs.StartListening();
+
+        selectedPiece = m;
+        selectedPiece.MovementCompleted += (s,e) => Inputs.StartListening();
+        
+    }
 
     public event EventHandler GameWon;
     public event EventHandler GameLost;
@@ -157,6 +196,8 @@ public class BoardManager : MonoBehaviour {
 
     private void EndTurn()
     {
+        MoveCount++;
+
         List<TilePiece> boardList = board.Cast<TilePiece>().ToList();
 
         //check if the game has won, if all destinations have been completed
@@ -184,32 +225,92 @@ public class BoardManager : MonoBehaviour {
 
 
 
-    public void MoveSelectedPiece(int rowOffset, int colOffset)
+    public bool AttemptToMoveSelected(int rowOffset, int colOffset)
     {
         if (selectedPiece == null)
-            return;
+            return false;
 
+        
         int dRow = selectedPiece.Row + rowOffset;
         int dCol = selectedPiece.Column + colOffset;
 
-        //check if valid move
         TilePiece destP = GetTile(dRow, dCol);
         if (destP == null)
-            return;
+            return false;//exit if heading out of board
 
-        if(destP.IsLandable)
+
+        TilePiece jumpedOver = null;
+
+        //perform jump
+        if(!destP.IsLandable && !destP.IsRedirector && destP.CanBeJumpedOver)//if can't land on then recalculate for jumping
         {
+            jumpedOver = destP;
+            dRow = selectedPiece.Row + (rowOffset * 2);
+            dCol = selectedPiece.Column + (colOffset * 2);
+            destP = GetTile(dRow, dCol);
 
+            if (destP == null)
+                return false;//jump would be out of board
         }
-        else if(destP.IsRedirector)
-        {
 
-        }
-        else if(destP.CanBeJumpedOver)
+        if (destP.IsRedirector)
         {
+            TilePiece destP2 = destP;//intermediatary step
+            destP = GetTile(dRow + destP.RedirectRowOffset, dCol + destP.RedirectColumnOffset);
+
+            selectedPiece.Move(destP2);//step on fountain
+            selectedPiece.Move(destP);//move to where fountain is pointing
             
         }
+        else if (destP.IsLandable)
+        {
+            selectedPiece.Move(destP);
+        }
+        else
+        {
+            return false;//no moves completed
+        }
+
+        //is selected moving destoyed?
+        if (destP.KillsPieceOnLand || (jumpedOver != null && jumpedOver.KillsPieceOnJumpOver))
+        {
+            selectedPiece.Kill();
+            selectedPiece = null;
+        }
+
+        //is jumped over piece destroyed?
+        if(jumpedOver != null && jumpedOver.IsDestroyedOnJumpOver)
+        {//TODO move tile destruction inside tile? - reset all pub vars to empty, sprite to none, kill all pieces inside
+            jumpedOver.MovingPiece.Kill();
+            TilePiece newT = ((GameObject)Instantiate(EmptyPiece, new Vector3(jumpedOver.Column, -jumpedOver.Row, 0f), Quaternion.identity)).GetComponent<TilePiece>();
+            board[jumpedOver.Row, jumpedOver.Column] = newT;
+            jumpedOver.gameObject.SetActive(false);
+        }
+
+        //is final landed piece destroyed?
+        if (destP.IsDestroyedOnMoveOn || (jumpedOver != null && jumpedOver.IsDestroyedOnJumpOver))
+        {
+            TilePiece newT = ((GameObject)Instantiate(EmptyPiece, new Vector3(destP.Column, -destP.Row, 0f), Quaternion.identity)).GetComponent<TilePiece>();
+            board[destP.Row, destP.Column] = newT;
+            destP.gameObject.SetActive(false);
+        }
+
+        return true;
     }
+
+
+
+    //private void MoveSelectedToTile(TilePiece tp)
+    //{
+
+
+    //    TilePiece curTile = GetTile(selectedPiece.Row, selectedPiece.Column);
+    //    selectedPiece.Move(tp);
+    //    tp.MovingPiece = selectedPiece;
+    //    curTile.MovingPiece = null;
+    //}
+
+
 
 
     private TilePiece GetTile(int r, int c)

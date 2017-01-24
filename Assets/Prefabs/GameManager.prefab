@@ -53,9 +53,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boardScript: {fileID: 0}
-  PlayerCanMove: 0
-  MovablePieces: []
-  SelectedPiece: {fileID: 0}
 --- !u!114 &114000013898473796
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -67,10 +64,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ade91bb771b530d46b2a7135ddbacdb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MovablePieces:
-  - {fileID: 1000012425783164, guid: 3fd1c4191e5eb42448c9a1c3f3cba14c, type: 2}
-  DestinationPieces:
-  - {fileID: 1000011112223610, guid: 54ab5e4be37d581469baf0095740e892, type: 2}
+  MovablePiece_Red: {fileID: 1000012425783164, guid: 3fd1c4191e5eb42448c9a1c3f3cba14c,
+    type: 2}
+  MovablePiece_Yellow: {fileID: 1000011947190466, guid: 3a7312073ff2aeb49b2f0ef8747e54aa,
+    type: 2}
+  MovablePiece_Blue: {fileID: 1000012978498858, guid: cccba76ef9542994eb4baf71829575c9,
+    type: 2}
+  MovablePiece_Green: {fileID: 1000012082157684, guid: e6b27ddc822e1674ea637d0e75ed0cdf,
+    type: 2}
+  DestinationPiece_Red: {fileID: 1000011112223610, guid: 54ab5e4be37d581469baf0095740e892,
+    type: 2}
+  DestinationPiece_Yellow: {fileID: 1000014070142512, guid: ad0d8c36e8d607a4bab0c6d67c0c7943,
+    type: 2}
+  DestinationPiece_Blue: {fileID: 1000010242628094, guid: 4ca8ed9db7375f041b4eb21cb6fc70ee,
+    type: 2}
+  DestinationPiece_Green: {fileID: 1000013423233408, guid: 3434aecec8be8454ca1815c337d29c66,
+    type: 2}
   EmptyPiece: {fileID: 1000011752833104, guid: 6cc5feac4cd87244cbba1e57f4f38155, type: 2}
   LandingPiece: {fileID: 1000011718002606, guid: 5c97a067c25d0614c946fd6df5646a51,
     type: 2}
@@ -85,3 +94,4 @@ MonoBehaviour:
     type: 2}
   FakeDisappearingPiece: {fileID: 1000012968229614, guid: 6ffc0d65020c8a740bc3c0f9da473ac3,
     type: 2}
+  MoveCount: 0

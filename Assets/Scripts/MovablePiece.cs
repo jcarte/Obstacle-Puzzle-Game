@@ -10,9 +10,11 @@ public class MovablePiece : BasePiece
     public float moveTime = 0.1f;			//Time it will take object to move, in seconds.
     private float inverseMoveTime;          //Used to make movement more efficient.
 
-    [HideInInspector]
-    public bool IsSelected = false;
+    //[HideInInspector]
+    //public bool IsSelected = false;
 
+    [HideInInspector]
+    public TilePiece PieceInside = null;
 
     public event EventHandler MovementCompleted;
     public event EventHandler Clicked;
@@ -29,20 +31,26 @@ public class MovablePiece : BasePiece
         inverseMoveTime = 1f / moveTime;
 
         rb2D = GetComponent<Rigidbody2D>();
-        GameManager.Instance.AddMovablePiece(this);
+        //GameManager.Instance.AddMovablePiece(this);
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    //void Update()
+    //{
 
-    }
+    //}
 
 
 
     public void Move(TilePiece t)
     {
+        if (PieceInside != null)
+            PieceInside.MovingPiece = null;
+
         Move(t.Row - Row, t.Column - Column);
+        
+        t.MovingPiece = this;
+        PieceInside = t;
     }
 
     //public void Jump(TilePiece t)
@@ -129,7 +137,13 @@ public class MovablePiece : BasePiece
         IsMoving = false;
     }
 
-
+    public void Kill()
+    {
+        Clicked = null;
+        PieceInside.MovingPiece = null;
+        PieceInside = null;
+        gameObject.SetActive(false);
+    }
     
 
     private void OnMouseDown()
