@@ -98,17 +98,33 @@ public class InputListener : MonoBehaviour {
             //GameManager.Instance.MoveCurrentPiece(horizontal, -vertical);
 
             if (horizontal > 0)
-                if(MoveRight != null)
+            {
+                if (MoveRight != null)
+                {
                     MoveRight.Invoke(this, null);
+                }
+            }
             else if (horizontal < 0)
+            {
                 if (MoveLeft != null)
+                {
                     MoveLeft.Invoke(this, null);
+                }
+            }
             else if (vertical > 0)
+            {
                 if (MoveUp != null)
+                {
                     MoveUp.Invoke(this, null);
+                }
+            }
             else if (vertical < 0)
+            {
                 if (MoveDown != null)
+                {
                     MoveDown.Invoke(this, null);
+                }
+            }
         }
     }
 }

@@ -94,4 +94,6 @@ MonoBehaviour:
     type: 2}
   FakeDisappearingPiece: {fileID: 1000012968229614, guid: 6ffc0d65020c8a740bc3c0f9da473ac3,
     type: 2}
+  InputListener: {fileID: 1000013496015748, guid: a8cea0313c8b9174cbc4f7c997fd9744,
+    type: 2}
   MoveCount: 0

@@ -139,6 +139,11 @@ public class MovablePiece : BasePiece
 
     public void Kill()
     {
+        StopAllCoroutines();
+
+        if (MovementCompleted != null)
+            MovementCompleted.Invoke(this, null);
+
         Clicked = null;
         PieceInside.MovingPiece = null;
         PieceInside = null;

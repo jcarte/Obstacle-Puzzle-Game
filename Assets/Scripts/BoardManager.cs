@@ -30,6 +30,8 @@ public class BoardManager : MonoBehaviour {
     public GameObject DisappearingPiece;
     public GameObject FakeDisappearingPiece;
 
+    public GameObject InputListener;
+
 
     public InputListener Inputs { get; private set; }
 
@@ -50,7 +52,7 @@ public class BoardManager : MonoBehaviour {
         board = new TilePiece[NumberOfRows, NumberOfColumns];
 
         //Rubbish
-        Inputs = ((GameObject)Instantiate(new GameObject(), new Vector3(0f, 0f, 0f), Quaternion.identity)).GetComponent<InputListener>();
+        Inputs = ((GameObject)Instantiate(InputListener, new Vector3(0f, 0f, 0f), Quaternion.identity)).GetComponent<InputListener>();
 
         
 
@@ -152,28 +154,27 @@ public class BoardManager : MonoBehaviour {
             }
         }
 
-        Inputs.MoveUp += (s, e) => {
-            Inputs.StopListening();
-            if (!AttemptToMoveSelected(-1, 0))
-            { Inputs.StartListening(); }
-        };
-        Inputs.MoveDown += (s, e) => {
-            Inputs.StopListening();
-            if (!AttemptToMoveSelected(1, 0))
-            { Inputs.StartListening(); }
-        };
-        Inputs.MoveRight += (s, e) => {
-            Inputs.StopListening();
-            if (!AttemptToMoveSelected(0, 1))
-            { Inputs.StartListening(); }
-        };
-        Inputs.MoveLeft += (s, e) => {
-            Inputs.StopListening();
-            if (!AttemptToMoveSelected(0, -1))
-            { Inputs.StartListening(); }
-        };
+        Inputs.MoveUp += (s, e) => ProcessMove(-1,0);
+        Inputs.MoveDown += (s, e) => ProcessMove(1,0);
+        Inputs.MoveRight += (s, e) => ProcessMove(0, 1);
+        Inputs.MoveLeft += (s, e) => ProcessMove(0, -1);
 
         Inputs.StartListening();
+    }
+
+
+    private void ProcessMove(int rows, int cols)//TODO better name
+    {
+
+        Inputs.StopListening();
+        if (AttemptToMoveSelected(rows, cols))
+        {
+            EndTurn();
+        }
+        else//move failed
+        {
+            Inputs.StartListening();
+        }
     }
 
     private void ChangeSelectedPiece(MovablePiece m)
@@ -208,16 +209,23 @@ public class BoardManager : MonoBehaviour {
             return;
         }
 
-        int movePieceCount = boardList.Count(p => p.HasMovingPiece);
-        int destinationCount = boardList.Count(p => p.IsDestination);
+        List<Color> cols = boardList.GroupBy(p => p.PieceColour).Select(pp => pp.Key).Where(c=> c != new Color(0,0,0,0)).ToList();
 
-        //check if game lost, if there are less moving pieces than destinations
-        if (movePieceCount < destinationCount)
+        foreach (Color c in cols)
         {
-            if (GameLost != null)
-                GameLost.Invoke(this, null);
-            return;
+            
+            int movePieceCount = boardList.Count(p => p.HasMovingPiece && p.MovingPiece.PieceColour == c);
+            int destinationCount = boardList.Count(p => p.IsDestination && p.PieceColour == c);
+
+            //check if game lost, if there are less moving pieces than destinations
+            if (movePieceCount < destinationCount)
+            {
+                if (GameLost != null)
+                    GameLost.Invoke(this, null);
+                return;
+            }
         }
+        
 
 
 
@@ -271,12 +279,7 @@ public class BoardManager : MonoBehaviour {
             return false;//no moves completed
         }
 
-        //is selected moving destoyed?
-        if (destP.KillsPieceOnLand || (jumpedOver != null && jumpedOver.KillsPieceOnJumpOver))
-        {
-            selectedPiece.Kill();
-            selectedPiece = null;
-        }
+
 
         //is jumped over piece destroyed?
         if(jumpedOver != null && jumpedOver.IsDestroyedOnJumpOver)
@@ -293,6 +296,13 @@ public class BoardManager : MonoBehaviour {
             TilePiece newT = ((GameObject)Instantiate(EmptyPiece, new Vector3(destP.Column, -destP.Row, 0f), Quaternion.identity)).GetComponent<TilePiece>();
             board[destP.Row, destP.Column] = newT;
             destP.gameObject.SetActive(false);
+        }
+
+        //is selected moving destoyed?
+        if (destP.KillsPieceOnLand || (jumpedOver != null && jumpedOver.KillsPieceOnJumpOver))
+        {
+            selectedPiece.Kill();
+            selectedPiece = null;
         }
 
         return true;

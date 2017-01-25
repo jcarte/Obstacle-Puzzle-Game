@@ -51,6 +51,8 @@ public class GameManager : MonoBehaviour {
 
     private void InitGame()
     {
+        Debug.ClearDeveloperConsole();
+
         Level v1 = Level.Create(4, 5);
 
         for (int r = 0; r < v1.RowCount; r++)
@@ -87,8 +89,7 @@ public class GameManager : MonoBehaviour {
         //Level lvl = LevelManager.RestoreLevel(path);
         Level lvl = v1;
 
-        boardScript = GetComponent<BoardManager>();
-        boardScript.SetupBoard(lvl);
+        
 
         float width = lvl.ColumnCount;
         float height = lvl.RowCount;
@@ -96,6 +97,13 @@ public class GameManager : MonoBehaviour {
         Camera cam = GameObject.Find("Main Camera").GetComponent<Camera>();
         cam.transform.position = new Vector3(width * 0.5f, height * -0.5f, -10f);
         cam.orthographicSize = Math.Max((width + 1) / 2, (height + 1) / 2);
+
+        boardScript = GetComponent<BoardManager>();
+        boardScript.SetupBoard(lvl);
+
+        boardScript.GameWon += (s, e) => Debug.Log(string.Format("Game Won in {0} moves", ((BoardManager)s).MoveCount));
+        boardScript.GameLost += (s, e) => Debug.Log(string.Format("Game Lost in {0} moves", ((BoardManager)s).MoveCount));
+
 
     }
 
