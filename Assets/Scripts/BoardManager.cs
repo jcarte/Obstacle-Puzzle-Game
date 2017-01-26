@@ -53,7 +53,7 @@ public class BoardManager : MonoBehaviour {
 
         //Rubbish
         Inputs = ((GameObject)Instantiate(InputListener, new Vector3(0f, 0f, 0f), Quaternion.identity)).GetComponent<InputListener>();
-
+        
         
 
         for (int r = 0; r < NumberOfRows; r++)
@@ -63,6 +63,7 @@ public class BoardManager : MonoBehaviour {
                 Level.Cell ce = lvl.Array[r].Cells[c];
 
                 GameObject go = null;
+                int rotation = 0;
 
                 switch (ce.Tile.Type)
                 {
@@ -108,11 +109,17 @@ public class BoardManager : MonoBehaviour {
                         break;
                     case Level.TileType.Redirect:
                         go = RedirectPiece;
+                        if (ce.Tile.Redirect.RowOffset == 0 && ce.Tile.Redirect.ColumnOffset == 1)
+                            rotation = 270;
+                        else if (ce.Tile.Redirect.RowOffset == 1 && ce.Tile.Redirect.ColumnOffset == 0)
+                            rotation = 180;
+                        else if (ce.Tile.Redirect.RowOffset == 0 && ce.Tile.Redirect.ColumnOffset == -1)
+                            rotation = 90;
                         break;
                 }
                 
                 //AddTile(go, r, c);
-                TilePiece tp = ((GameObject)Instantiate(go, new Vector3(c, -r, 0f), Quaternion.identity)).GetComponent<TilePiece>();
+                TilePiece tp = ((GameObject)Instantiate(go, new Vector3(c, -r, 0f), Quaternion.Euler(0,0, rotation))).GetComponent<TilePiece>();
 
                 if(ce.Tile.Type == Level.TileType.Redirect)
                 {
@@ -266,8 +273,8 @@ public class BoardManager : MonoBehaviour {
             TilePiece destP2 = destP;//intermediatary step
             destP = GetTile(dRow + destP.RedirectRowOffset, dCol + destP.RedirectColumnOffset);
 
-            selectedPiece.Move(destP2);//step on fountain
-            selectedPiece.Move(destP);//move to where fountain is pointing
+            selectedPiece.Move(destP2,destP);//step on fountain
+            //selectedPiece.Move(destP);//move to where fountain is pointing
             
         }
         else if (destP.IsLandable)
@@ -279,16 +286,6 @@ public class BoardManager : MonoBehaviour {
             return false;//no moves completed
         }
 
-
-
-        //is jumped over piece destroyed?
-        if(jumpedOver != null && jumpedOver.IsDestroyedOnJumpOver)
-        {//TODO move tile destruction inside tile? - reset all pub vars to empty, sprite to none, kill all pieces inside
-            jumpedOver.MovingPiece.Kill();
-            TilePiece newT = ((GameObject)Instantiate(EmptyPiece, new Vector3(jumpedOver.Column, -jumpedOver.Row, 0f), Quaternion.identity)).GetComponent<TilePiece>();
-            board[jumpedOver.Row, jumpedOver.Column] = newT;
-            jumpedOver.gameObject.SetActive(false);
-        }
 
         //is final landed piece destroyed?
         if (destP.IsDestroyedOnMoveOn || (jumpedOver != null && jumpedOver.IsDestroyedOnJumpOver))
@@ -304,6 +301,21 @@ public class BoardManager : MonoBehaviour {
             selectedPiece.Kill();
             selectedPiece = null;
         }
+
+        //is jumped over piece destroyed?
+        if (jumpedOver != null && jumpedOver.IsDestroyedOnJumpOver)
+        {//TODO move tile destruction inside tile? - reset all pub vars to empty, sprite to none, kill all pieces inside
+            if(jumpedOver.MovingPiece != null)
+                jumpedOver.MovingPiece.Kill();
+
+            TilePiece newT = ((GameObject)Instantiate(EmptyPiece, new Vector3(jumpedOver.Column, -jumpedOver.Row, 0f), Quaternion.identity)).GetComponent<TilePiece>();
+            board[jumpedOver.Row, jumpedOver.Column] = newT;
+            jumpedOver.gameObject.SetActive(false);
+        }
+
+
+
+
 
         return true;
     }

@@ -53,21 +53,21 @@ public class GameManager : MonoBehaviour {
     {
         Debug.ClearDeveloperConsole();
 
-        Level v1 = Level.Create(4, 5);
+        //Level v1 = Level.Create(4, 5);
 
-        for (int r = 0; r < v1.RowCount; r++)
-        {
-            for (int c = 0; c < v1.ColumnCount; c++)
-            {
-                v1.ChangeTile(r, c, Level.TileType.Landing);
+        //for (int r = 0; r < v1.RowCount; r++)
+        //{
+        //    for (int c = 0; c < v1.ColumnCount; c++)
+        //    {
+        //        v1.ChangeTile(r, c, Level.TileType.Landing);
 
-            }
-        }
+        //    }
+        //}
 
-        v1.AddMovable(1, 1, Level.ColourType.Blue);
-        v1.AddMovable(2, 2, Level.ColourType.Red);
-        v1.ChangeTile(0, 2, Level.TileType.Disappearing);
-        v1.ChangeTile(3, 3, Level.TileType.Destination, Level.ColourType.Blue);
+        //v1.AddMovable(1, 1, Level.ColourType.Blue);
+        //v1.AddMovable(2, 2, Level.ColourType.Red);
+        //v1.ChangeTile(0, 2, Level.TileType.Disappearing);
+        //v1.ChangeTile(3, 3, Level.TileType.Destination, Level.ColourType.Blue);
 
 
         //v1.ChangeTile(0, 0, Level.TileType.Disappearing);
@@ -75,12 +75,41 @@ public class GameManager : MonoBehaviour {
         //v1.ChangeTile(0, 2, Level.TileType.FakeDisappearing);
         //v1.ChangeTile(0, 3, Level.TileType.NonLanding);
         //v1.ChangeTile(0, 4, Level.TileType.Obstacle);
-        //v1.ChangeTile(1, 0, Level.TileType.Redirect, 2, 2);
+        //v1.ChangeTile(1, 0, Level.TileType.Redirect, -1, 0);
         //v1.ChangeTile(1, 1, Level.TileType.Landing);
         //v1.ChangeTile(1, 2, Level.TileType.Landing);
         //v1.ChangeTile(1, 3, Level.TileType.Landing);
         //v1.ChangeTile(2, 3, Level.TileType.Destination, Level.ColourType.Red);
         //v1.AddMovable(1, 1, Level.ColourType.Red);
+
+
+
+
+        Level v1 = Level.Create(3, 6);
+        v1.ChangeTile(0, 0, Level.TileType.Landing);
+        v1.ChangeTile(0, 1, Level.TileType.Landing);
+        v1.ChangeTile(0, 2, Level.TileType.Landing);
+        v1.ChangeTile(0, 3, Level.TileType.Landing);
+        v1.ChangeTile(0, 4, Level.TileType.Landing);
+        v1.ChangeTile(0, 5, Level.TileType.Landing);
+
+        v1.ChangeTile(1, 0, Level.TileType.Landing);
+        v1.ChangeTile(1, 1, Level.TileType.Redirect, -1, 0);
+        v1.ChangeTile(1, 2, Level.TileType.Redirect, 0, 1);
+        v1.ChangeTile(1, 3, Level.TileType.Redirect, 1, 0);
+        v1.ChangeTile(1, 4, Level.TileType.Redirect, 0, -1);
+        v1.ChangeTile(1, 5, Level.TileType.Landing);
+
+        v1.ChangeTile(2, 0, Level.TileType.Landing);
+        v1.ChangeTile(2, 1, Level.TileType.Landing);
+        v1.ChangeTile(2, 2, Level.TileType.Landing);
+        v1.ChangeTile(2, 3, Level.TileType.Landing);
+        v1.ChangeTile(2, 4, Level.TileType.Landing);
+        v1.ChangeTile(2, 5, Level.TileType.Landing);
+
+        v1.AddMovable(0, 0, Level.ColourType.Yellow);
+
+
 
 
         //string path = "Levels\\Level1.DAT";
@@ -385,57 +414,28 @@ public class GameManager : MonoBehaviour {
 
 /* TODO
  * ==========
- * -Add loading colour of destination and movables from Level file in board manager
- * -Add redirect vector from level to gameobject in board manager
- * -Add game over event
- * -Create level files x 10
+ * -Redirect landing on redirect not working (use while loop?)
+ * -Build test boards to check all tiles working properly
  * -Load level correctly from file
- * 
- * -On move flashs "Not valid" check move logic, still messy
- * -Build test boards to check
+ * -Add game over UI screen and stats
+ * -Add main menu UI
+ * -Add new images
+ * -Add sounds
+ * -Comment/Clean
+ * -Create level files x 10
+ *
  * -Add medal win conditions in level object, evaluate at game manager not board
  */
 
 //New Structure....
 /*
-    Movable Piece
-        - Add   Public bool IsSelected
-
-    Tile Piece - Added data to reduce moving logic at manager
-        - Add   Public MovablePiece MovingPiece
-                Public bool IsCompleted         (is destination and contains a moving piece of the same colour)
-                Public bool IsLandable          (now has movable so can full evaluate landability and leapability, reduced logic in managers)
-                Public bool IsJumpOverable
-                ????Public bool IsOnBoardEdge       (will need info about the current board, e.g. its dimensions, could make public static for all to see?)
-    
-    Board Manager - now handles both rendering and logic of this one particular board (could move rendering and inputListening to new objects)
-        - Takes Level input object as does currently, converts this to TilePiece[,] and keep internally instead of passing back to GameManager
-        - Handle moving objects
-        - Detects game win/lose, events for each
-        - Initialises and destroys all game objects
-        - Receives camera object, adjusts
-
-        public static BoardManager SetupBoard(Level lvl) - Static init
-        private TilePiece board[,]
-        public event GameWon
-        public event GameLost
-        public int MoveCount
-        private MovablePiece selectedPiece
-        private void EndTurn() - Checks win/lose conditions
-        private void MoveSelectedPiece(Vector v) - Straight from input so don't have to translate enum, works out moving vector, calls mp.Move() then moves the piece object to inside the destination tile object
-        private void ChangeSelectedPiece(MovablePiece mp)
-
-
-
     
     Game Manager - will handle everything outside of the current board configuration
         - Choosing level, get level config object, setup new board, listen to game finished events
         - Gather and save game results
         - Bring up UI menus
         - Starts new level
-        - Inputs listened for here???
 
-    Not confident on Listening, put in GameManager / BoardManager / InputListener (new)??
 
 
  * 
