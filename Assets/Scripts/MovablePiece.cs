@@ -24,9 +24,11 @@ public class MovablePiece : BasePiece
     public event EventHandler MovementCompleted;
     public event EventHandler Clicked;
 
-    private Queue<Vector2> moveq = new Queue<Vector2>();
+    private Queue<Vector2> moveq = new Queue<Vector2>(25);
 
     public bool IsMoving { get; private set; }
+
+    public bool IsKillPending = false;
 
     // Use this for initialization
     void Start()
@@ -151,19 +153,32 @@ public class MovablePiece : BasePiece
         
 
         IsMoving = false;
+
+        if(IsKillPending)
+        {
+            Kill();
+        }
     }
 
     public void Kill()
     {
-        StopAllCoroutines();
+        if(IsMoving)
+        {
+            IsKillPending = true;
+        }
+        else
+        {
+            StopAllCoroutines();
 
-        Clicked = null;
-        PieceInside.MovingPiece = null;
-        PieceInside = null;
-        gameObject.SetActive(false);
+            Clicked = null;
+            PieceInside.MovingPiece = null;
+            PieceInside = null;
+            gameObject.SetActive(false);
 
-        if (MovementCompleted != null)
-            MovementCompleted.Invoke(this, null);
+            //if (MovementCompleted != null)
+            //    MovementCompleted.Invoke(this, null);
+        }
+        
     }
     
 
