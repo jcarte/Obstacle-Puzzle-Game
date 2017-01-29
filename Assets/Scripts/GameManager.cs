@@ -94,10 +94,12 @@ public class GameManager : MonoBehaviour {
         v1.ChangeTile(0, 5, Level.TileType.Landing);
 
         v1.ChangeTile(1, 0, Level.TileType.Landing);
-        v1.ChangeTile(1, 1, Level.TileType.Redirect, -1, 0);
-        v1.ChangeTile(1, 2, Level.TileType.Redirect, 0, 1);
-        v1.ChangeTile(1, 3, Level.TileType.Redirect, 1, 0);
-        v1.ChangeTile(1, 4, Level.TileType.Redirect, 0, -1);
+        v1.ChangeTile(1, 1, Level.TileType.Redirect, 0, 1);
+        //v1.ChangeTile(1, 2, Level.TileType.Redirect, 0, 1);
+        v1.ChangeTile(1, 2, Level.TileType.Empty);
+        v1.ChangeTile(1, 3, Level.TileType.Empty);
+        //v1.ChangeTile(1, 3, Level.TileType.Redirect, 0, 1);
+        v1.ChangeTile(1, 4, Level.TileType.Redirect, 0, 1);
         v1.ChangeTile(1, 5, Level.TileType.Landing);
 
         v1.ChangeTile(2, 0, Level.TileType.Landing);

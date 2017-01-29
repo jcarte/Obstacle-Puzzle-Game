@@ -7,6 +7,9 @@ public class TilePiece : BasePiece {
     //TODO implement
     //private Animator animator;
 
+    public int Column { get { return (int)transform.position.x; } }
+    public int Row { get { return -(int)transform.position.y; } }
+
     public bool CanBeLandedOn;
     public bool CanBeJumpedOver;
 

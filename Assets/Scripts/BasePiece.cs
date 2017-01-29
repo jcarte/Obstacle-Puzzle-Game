@@ -4,8 +4,8 @@ using System.Collections;
 public class BasePiece : MonoBehaviour {
 
 
-    public int Column { get { return (int)transform.position.x; } }
-    public int Row { get { return -(int)transform.position.y; } }
+    //public int Column { get { return (int)transform.position.x; } }
+    //public int Row { get { return -(int)transform.position.y; } }
 
     public Color PieceColour;
 

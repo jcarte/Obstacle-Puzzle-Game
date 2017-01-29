@@ -7,6 +7,9 @@ using System.Collections;
 public class MovablePiece : BasePiece
 {
 
+    public int Row;
+    public int Column;
+    
     private Rigidbody2D rb2D;
 
     public float moveTime = 0.1f;			//Time it will take object to move, in seconds.
@@ -34,8 +37,14 @@ public class MovablePiece : BasePiece
         inverseMoveTime = 1f / moveTime;
 
         rb2D = GetComponent<Rigidbody2D>();
-        //GameManager.Instance.AddMovablePiece(this);
-    }
+
+
+        Column = (int)transform.position.x;
+        Row = -(int)transform.position.y;
+
+
+    //GameManager.Instance.AddMovablePiece(this);
+}
 
     // Update is called once per frame
     //void Update()
@@ -53,10 +62,12 @@ public class MovablePiece : BasePiece
         foreach (TilePiece t in ts)
         {
             //Store start position to move from, based on objects current transform position.
-            Vector2 start = transform.position;
+            //Vector2 start = transform.position;
 
             // Calculate end position based on the direction parameters passed in when calling Move.
-            Vector2 end = start + new Vector2((t.Column - Column), -(t.Row - Row));
+            //Vector2 end = start + new Vector2((t.Column - Column), -(t.Row - Row));
+
+            Vector2 end = t.transform.position;
 
             moveq.Enqueue(end);
         }
@@ -64,6 +75,9 @@ public class MovablePiece : BasePiece
         TilePiece last = ts.Last();
         last.MovingPiece = this;
         PieceInside = last;
+
+        Row = last.Row;
+        Column = last.Column;
 
         if(!IsMoving)
             StartCoroutine(SmoothMovement());
