@@ -12,15 +12,6 @@ public class GameManager : MonoBehaviour {
 
     public static GameManager Instance = null;
 
-    //[HideInInspector]
-    //public bool PlayerCanMove;
-
-    //public int MoveCount { get; private set; }
-
-    //public TilePiece[,] Board;
-
-    //public List<MovablePiece> MovablePieces;
-    //public MovablePiece SelectedPiece;
 
     
 
