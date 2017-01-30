@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Linq;
 
-public class TilePiece : BasePiece {
-
+/// <summary>
+/// Background piece that moving pieces are placed on and interact with
+/// </summary>
+public class TilePiece : MonoBehaviour
+{
     //TODO implement
     //private Animator animator;
 
     public int Column { get { return (int)transform.position.x; } }
     public int Row { get { return -(int)transform.position.y; } }
+
+    public Color PieceColour;
 
     public bool CanBeLandedOn;
     public bool CanBeJumpedOver;
@@ -21,8 +24,6 @@ public class TilePiece : BasePiece {
     public bool KillsPieceOnJumpOver;
     public bool IsRedirector;
 
-
-    //public Vector2 RedirectDirection;//TODO FIX THIS
 
     public int RedirectColumnOffset;
     public int RedirectRowOffset;

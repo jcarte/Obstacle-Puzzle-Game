@@ -558,6 +558,7 @@ public class GameManager : MonoBehaviour {
  * -Add sounds
  * -Comment/Clean
  * -Create level files x 10
+ * -Save User Progress
  *
  * -Add medal win conditions in level object, evaluate at game manager not board
  * -Multiple fountains leading to a disappearing log, log goes way before the frog is killed

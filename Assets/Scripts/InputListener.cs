@@ -1,21 +1,45 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System;
 
-public class InputListener : MonoBehaviour {
-
+/// <summary>
+/// Listens to inputs from user, either keyboard input or touch screen drag
+/// </summary>
+public class InputListener : MonoBehaviour 
+{
+    /// <summary>
+    /// Input to move up has been detected
+    /// </summary>
     public event EventHandler MoveUp;
+
+    /// <summary>
+    /// Input to move down has been detected
+    /// </summary>
     public event EventHandler MoveDown;
+
+    /// <summary>
+    /// Input to move right has been detected
+    /// </summary>
     public event EventHandler MoveRight;
+
+    /// <summary>
+    /// Input to move left has been detected
+    /// </summary>
     public event EventHandler MoveLeft;
 
+    //should inputs be listened for
     private bool isListening = false;
 
+    /// <summary>
+    /// Begin listening for inputs from the user
+    /// </summary>
     public void StartListening()
     {
         isListening = true;
     }
 
+    /// <summary>
+    /// Stop listening for inputs from the user
+    /// </summary>
     public void StopListening()
     {
         isListening = false;
@@ -38,8 +62,6 @@ public class InputListener : MonoBehaviour {
 
         //Get input from the input manager, round it to an integer and store in vertical to set y axis move direction
         vertical = (int)(Input.GetAxisRaw("Vertical"));
-
-
 
         //Check if moving horizontally, if so set vertical to zero.
         if (horizontal != 0)
@@ -92,11 +114,10 @@ public class InputListener : MonoBehaviour {
         //Check if we have a non-zero value for horizontal or vertical
         if (horizontal != 0 || vertical != 0)
         {
-
             //vertically down (-1) means increase row number (+1)
             //Debug.Log("Input: " + horizontal + "," + -vertical);
-            //GameManager.Instance.MoveCurrentPiece(horizontal, -vertical);
 
+            //Fire events according to detected input directions
             if (horizontal > 0)
             {
                 if (MoveRight != null)
