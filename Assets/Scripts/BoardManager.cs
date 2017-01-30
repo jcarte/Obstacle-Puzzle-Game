@@ -305,9 +305,8 @@ public class BoardManager : MonoBehaviour {
                     board[jumpedOver.Row, jumpedOver.Column] = newT;
                     jumpedOver.gameObject.SetActive(false);
                 }
-
-                //is final landed piece destroyed?
-                if (landedOn.IsDestroyedOnMoveOn)
+                
+                else if (landedOn.IsDestroyedOnMoveOn)//is final landed piece destroyed?
                 {
                     if (landedOn.MovingPiece != null)
                         landedOn.MovingPiece.Kill();

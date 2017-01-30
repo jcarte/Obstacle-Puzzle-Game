@@ -551,7 +551,6 @@ public class GameManager : MonoBehaviour {
 
 /* TODO
  * ==========
- * -Build test boards to check all tiles working properly
  * -Load level correctly from file
  * -Add game over UI screen and stats
  * -Add main menu UI
