@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour {
         //v1.AddMovable(1, 0, Level.ColourType.Yellow);
 
         //Demo Level
-        Level v1 = Level.Create(2, 5);
+        Level v1 = Level.Create(13, 5);
 
         v1.ChangeTile(0, 0, Level.TileType.Destination, Level.ColourType.Blue);
         v1.AddMovable(0, 0, Level.ColourType.Red);
@@ -117,6 +117,8 @@ public class GameManager : MonoBehaviour {
         v1.ChangeTile(1, 2, Level.TileType.Enemy);
 
 
+        v1.ChangeTile(12, 0, Level.TileType.Landing);
+        v1.ChangeTile(12, 4, Level.TileType.Landing);
 
         //TEST LEVEL
         //Level v1 = Level.Create(20, 5);
@@ -262,8 +264,16 @@ public class GameManager : MonoBehaviour {
         float height = lvl.RowCount;
 
         Camera cam = GameObject.Find("Main Camera").GetComponent<Camera>();
-        cam.transform.position = new Vector3(width * 0.5f, height * -0.5f, -10f);
-        cam.orthographicSize = Math.Max((width + 1) / 2, (height + 1) / 2);
+        cam.transform.position = new Vector3((width-1) * 0.5f, (height-1) * -0.5f, -10f);
+        
+        //cam.orthographicSize = Math.Max((width + 1) / 2, (height + 1) / 2)*2;
+        cam.orthographicSize = (Math.Max(width, height)) / (2 * (width > height ? cam.aspect : 1 ));//TODO need to account for top UI as will fill whole screen atm
+
+        /*
+         * RowsSeen = 2 * cam.orthographicSize
+         * ColsSeen = RowsSeen * cam.aspect
+         */
+
 
         boardScript = GetComponent<BoardManager>();
         boardScript.SetupBoard(lvl);
