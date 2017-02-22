@@ -268,11 +268,47 @@ public class GameManager : MonoBehaviour {
         boardScript = GetComponent<BoardManager>();
         boardScript.SetupBoard(lvl);
 
-        boardScript.GameWon += (s, e) => Debug.Log(string.Format("Game Won in {0} moves", ((BoardManager)s).MoveCount));
-        boardScript.GameLost += (s, e) => Debug.Log(string.Format("Game Lost in {0} moves", ((BoardManager)s).MoveCount));
+        boardScript.GameFinished += BoardFinished;
+        //boardScript.GameWon += (s, e) => Debug.Log(string.Format("Game Won in {0} moves", ((BoardManager)s).MoveCount));
+        //boardScript.GameLost += (s, e) => Debug.Log(string.Format("Game Lost in {0} moves", ((BoardManager)s).MoveCount));
 
+
+        
 
     }
+
+    private void BoardFinished(BoardManager board, BoardManager.GameResult result)
+    {
+        GameObject lvlui = GameObject.Find("LevelCompletePanel");//get level complete panel object
+        lvlui.gameObject.SetActive(true);//make it visible
+
+        Debug.Log(board.MoveCount);//number of moves
+
+        Debug.Log(board.Timer.Elapsed);//time played
+
+        //what happened in the game
+        if (result == BoardManager.GameResult.Gold)
+        {
+            Debug.Log("Gold!");
+        }
+        if (result == BoardManager.GameResult.Silver)
+        {
+            Debug.Log("Silver!");
+        }
+        if (result == BoardManager.GameResult.Bronze)
+        {
+            Debug.Log("Bronze!");
+        }
+        if (result == BoardManager.GameResult.Loss)
+        {
+            Debug.Log("Loss!");
+        }
+
+        lvlui.gameObject.SetActive(false);//make it go away
+
+    }
+
+    
 
     //private void InitGame()
     //{

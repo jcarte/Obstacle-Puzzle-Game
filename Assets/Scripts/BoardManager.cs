@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Diagnostics;
 
 public class BoardManager : MonoBehaviour {
 
@@ -194,8 +195,15 @@ public class BoardManager : MonoBehaviour {
         
     }
 
-    public event EventHandler GameWon;
-    public event EventHandler GameLost;
+    //public event EventHandler GameWon;
+    //public event EventHandler GameLost;
+
+    public event Action<BoardManager,GameResult> GameFinished;
+    
+    public enum GameResult { Gold, Silver, Bronze, Loss }
+
+    [HideInInspector]
+    public Stopwatch Timer = new Stopwatch();//TODO start and stop
 
     [HideInInspector]
     public int MoveCount = 0;
@@ -211,8 +219,9 @@ public class BoardManager : MonoBehaviour {
         //check if the game has won, if all destinations have been completed
         if(!boardList.Any(t => t.IsDestination && !t.IsCompleted))
         {
-            if (GameWon != null)
-                GameWon.Invoke(this, null);
+            if (GameFinished != null)
+                GameFinished.Invoke(this, GameResult.Gold);//TODO check medal
+            
             return;
         }
 
@@ -227,8 +236,8 @@ public class BoardManager : MonoBehaviour {
             //check if game lost, if there are less moving pieces than destinations
             if (movePieceCount < destinationCount)
             {
-                if (GameLost != null)
-                    GameLost.Invoke(this, null);
+                if (GameFinished != null)
+                    GameFinished.Invoke(this, GameResult.Loss);//TODO is this right?
                 return;
             }
         }
