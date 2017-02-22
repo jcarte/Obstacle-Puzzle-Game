@@ -12,15 +12,6 @@ public class GameManager : MonoBehaviour {
 
     public static GameManager Instance = null;
 
-    //[HideInInspector]
-    //public bool PlayerCanMove;
-
-    //public int MoveCount { get; private set; }
-
-    //public TilePiece[,] Board;
-
-    //public List<MovablePiece> MovablePieces;
-    //public MovablePiece SelectedPiece;
 
     
 
@@ -551,7 +542,6 @@ public class GameManager : MonoBehaviour {
 
 /* TODO
  * ==========
- * -Build test boards to check all tiles working properly
  * -Load level correctly from file
  * -Add game over UI screen and stats
  * -Add main menu UI
@@ -559,6 +549,7 @@ public class GameManager : MonoBehaviour {
  * -Add sounds
  * -Comment/Clean
  * -Create level files x 10
+ * -Save User Progress
  *
  * -Add medal win conditions in level object, evaluate at game manager not board
  * -Multiple fountains leading to a disappearing log, log goes way before the frog is killed

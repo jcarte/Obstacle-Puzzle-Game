@@ -85,8 +85,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 587d4466ec5f5034abed79c3b2ee3361, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveTime: 0.1
   PieceColour: {r: 0, g: 1, b: 0, a: 0}
+  Row: 0
+  Column: 0
+  PieceInside: {fileID: 0}
+  IsKillPending: 0
+  moveTime: 0.1
 --- !u!212 &212000014126687998
 SpriteRenderer:
   m_ObjectHideFlags: 1
