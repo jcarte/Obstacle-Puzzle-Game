@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour {
         //v1.AddMovable(1, 0, Level.ColourType.Yellow);
 
         //Demo Level
-        Level v1 = Level.Create(13, 5);
+        Level v1 = Level.Create(3, 5);
 
         v1.ChangeTile(0, 0, Level.TileType.Destination, Level.ColourType.Blue);
         v1.AddMovable(0, 0, Level.ColourType.Red);
@@ -117,8 +117,8 @@ public class GameManager : MonoBehaviour {
         v1.ChangeTile(1, 2, Level.TileType.Enemy);
 
 
-        v1.ChangeTile(12, 0, Level.TileType.Landing);
-        v1.ChangeTile(12, 4, Level.TileType.Landing);
+        v1.ChangeTile(2, 0, Level.TileType.Landing);
+        v1.ChangeTile(2, 4, Level.TileType.Landing);
 
         //TEST LEVEL
         //Level v1 = Level.Create(20, 5);
