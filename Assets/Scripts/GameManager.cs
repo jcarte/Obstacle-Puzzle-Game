@@ -13,11 +13,12 @@ public class GameManager : MonoBehaviour {
     public static GameManager Instance = null;
 
 
-    
+    private EndOfGameMenu endUI;
 
     // Use this for initialization
     void Start () {
         SceneManager.sceneLoaded += NewSceneLoaded;
+        endUI = GameObject.Find("Canvas").transform.FindChild("EndOfGame").GetComponent<EndOfGameMenu>();//get level complete panel object
     }
 
     private void NewSceneLoaded(Scene arg0, LoadSceneMode arg1)
@@ -289,32 +290,35 @@ public class GameManager : MonoBehaviour {
 
     private void BoardFinished(BoardManager board, BoardManager.GameResult result)
     {
-        GameObject lvlui = GameObject.Find("LevelCompletePanel");//get level complete panel object
-        lvlui.gameObject.SetActive(true);//make it visible
+        
+        //var child = parent.;
+        //EndOfGameMenu endUI = child;//get level complete panel object
+        endUI.Show(board.MoveCount, result);
+        //lvlui.gameObject.SetActive(true);//make it visible
 
-        Debug.Log(board.MoveCount);//number of moves
+        //Debug.Log(board.MoveCount);//number of moves
 
-        Debug.Log(board.Timer.Elapsed);//time played
+        //Debug.Log(board.Timer.Elapsed);//time played
 
-        //what happened in the game
-        if (result == BoardManager.GameResult.Gold)
-        {
-            Debug.Log("Gold!");
-        }
-        if (result == BoardManager.GameResult.Silver)
-        {
-            Debug.Log("Silver!");
-        }
-        if (result == BoardManager.GameResult.Bronze)
-        {
-            Debug.Log("Bronze!");
-        }
-        if (result == BoardManager.GameResult.Loss)
-        {
-            Debug.Log("Loss!");
-        }
+        ////what happened in the game
+        //if (result == BoardManager.GameResult.Gold)
+        //{
+        //    Debug.Log("Gold!");
+        //}
+        //if (result == BoardManager.GameResult.Silver)
+        //{
+        //    Debug.Log("Silver!");
+        //}
+        //if (result == BoardManager.GameResult.Bronze)
+        //{
+        //    Debug.Log("Bronze!");
+        //}
+        //if (result == BoardManager.GameResult.Loss)
+        //{
+        //    Debug.Log("Loss!");
+        //}
 
-        lvlui.gameObject.SetActive(false);//make it go away
+        //lvlui.gameObject.SetActive(false);//make it go away
 
     }
 
