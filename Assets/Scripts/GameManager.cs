@@ -288,6 +288,11 @@ public class GameManager : MonoBehaviour {
 
     }
 
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene("MenuScene");
+    }
+
     private void BoardFinished(BoardManager board, BoardManager.GameResult result)
     {
         
