@@ -19,6 +19,22 @@ public class Level
     public CellRow[] Array;
 
     /// <summary>
+    /// Number of moves to achieve bronze medal
+    /// </summary>
+    public int BronzeTarget;
+
+    /// <summary>
+    /// Number of moves to achieve Silver medal
+    /// </summary>
+    public int SilverTarget;
+
+    /// <summary>
+    /// Number of moves to achieve Gold medal
+    /// </summary>
+    public int GoldTarget;
+
+
+    /// <summary>
     /// Create a new object with given dimensions
     /// </summary>
     /// <param name="rows"></param>

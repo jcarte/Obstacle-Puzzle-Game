@@ -106,6 +106,10 @@ public class GameManager : MonoBehaviour {
         //Demo Level
         Level v1 = Level.Create(3, 5);
 
+        v1.BronzeTarget = 11;
+        v1.SilverTarget = 9;
+        v1.GoldTarget = 7;
+
         v1.ChangeTile(0, 0, Level.TileType.Destination, Level.ColourType.Blue);
         v1.AddMovable(0, 0, Level.ColourType.Red);
         v1.ChangeTile(0, 1, Level.TileType.Landing);
@@ -628,3 +632,12 @@ public class GameManager : MonoBehaviour {
 
  * 
  */
+
+
+
+ /*
+  * Completed Screen
+  * -Fire finished event on lose
+  * -Level/board has medals 
+  * 
+  */
