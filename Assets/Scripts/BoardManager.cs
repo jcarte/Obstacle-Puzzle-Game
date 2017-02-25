@@ -39,7 +39,8 @@ public class BoardManager : MonoBehaviour {
     public int NumberOfRows { get; private set; }
     public int NumberOfColumns { get; private set; }
 
-    private Level lvl;
+    [HideInInspector]
+    public Level lvl;
 
     private TilePiece[,] board;
 
@@ -226,7 +227,16 @@ public class BoardManager : MonoBehaviour {
         if(!boardList.Any(t => t.IsDestination && !t.IsCompleted))
         {
             if (GameFinished != null)
-                GameFinished.Invoke(this, GameResult.Gold);//TODO check medal
+            {
+                if(MoveCount > lvl.BronzeTarget)
+                    GameFinished.Invoke(this, GameResult.Loss);
+                else if (MoveCount > lvl.SilverTarget)
+                    GameFinished.Invoke(this, GameResult.Bronze);
+                else if (MoveCount > lvl.GoldTarget)
+                    GameFinished.Invoke(this, GameResult.Silver);
+                else
+                    GameFinished.Invoke(this, GameResult.Gold);
+            }
             
             return;
         }
@@ -236,7 +246,7 @@ public class BoardManager : MonoBehaviour {
         foreach (Color c in cols)
         {
             
-            int movePieceCount = boardList.Count(p => p.HasMovingPiece && p.MovingPiece.PieceColour == c);
+            int movePieceCount = boardList.Count(p => p.HasMovingPiece && p.MovingPiece.PieceColour == c && !p.MovingPiece.IsKillPending);
             int destinationCount = boardList.Count(p => p.IsDestination && p.PieceColour == c);
 
             //check if game lost, if there are less moving pieces than destinations
@@ -338,96 +348,7 @@ public class BoardManager : MonoBehaviour {
 
         return hasMovedOnce;
     }
-
-
-    //public bool AttemptToMoveSelected(int rowOffset, int colOffset)
-    //{
-    //    if (selectedPiece == null)
-    //        return false;
-
-
-    //    int dRow = selectedPiece.Row + rowOffset;
-    //    int dCol = selectedPiece.Column + colOffset;
-
-    //    TilePiece destP = GetTile(dRow, dCol);
-    //    if (destP == null)
-    //        return false;//exit if heading out of board
-
-
-    //    TilePiece jumpedOver = null;
-
-    //    //perform jump
-    //    if(!destP.IsLandable && !destP.IsRedirector && destP.CanBeJumpedOver)//if can't land on then recalculate for jumping
-    //    {
-    //        jumpedOver = destP;
-    //        dRow = selectedPiece.Row + (rowOffset * 2);
-    //        dCol = selectedPiece.Column + (colOffset * 2);
-    //        destP = GetTile(dRow, dCol);
-
-    //        if (destP == null)
-    //            return false;//jump would be out of board
-    //    }
-
-    //    if (destP.IsRedirector)
-    //    {
-    //        TilePiece destP2 = destP;//intermediatary step
-    //        destP = GetTile(dRow + destP.RedirectRowOffset, dCol + destP.RedirectColumnOffset);
-
-    //        selectedPiece.Move(destP2,destP);//step on fountain
-    //        //selectedPiece.Move(destP);//move to where fountain is pointing
-
-    //    }
-    //    else if (destP.IsLandable)
-    //    {
-    //        selectedPiece.Move(destP);
-    //    }
-    //    else
-    //    {
-    //        return false;//no moves completed
-    //    }
-
-
-    //    //is final landed piece destroyed?
-    //    if (destP.IsDestroyedOnMoveOn || (jumpedOver != null && jumpedOver.IsDestroyedOnJumpOver))
-    //    {
-    //        TilePiece newT = ((GameObject)Instantiate(EmptyPiece, new Vector3(destP.Column, -destP.Row, 0f), Quaternion.identity)).GetComponent<TilePiece>();
-    //        board[destP.Row, destP.Column] = newT;
-    //        destP.gameObject.SetActive(false);
-    //    }
-
-    //    //is selected moving destoyed?
-    //    if (destP.KillsPieceOnLand || (jumpedOver != null && jumpedOver.KillsPieceOnJumpOver))
-    //    {
-    //        selectedPiece.Kill();
-    //        selectedPiece = null;
-    //    }
-
-    //    //is jumped over piece destroyed?
-    //    if (jumpedOver != null && jumpedOver.IsDestroyedOnJumpOver)
-    //    {//TODO move tile destruction inside tile? - reset all pub vars to empty, sprite to none, kill all pieces inside
-    //        if(jumpedOver.MovingPiece != null)
-    //            jumpedOver.MovingPiece.Kill();
-
-    //        TilePiece newT = ((GameObject)Instantiate(EmptyPiece, new Vector3(jumpedOver.Column, -jumpedOver.Row, 0f), Quaternion.identity)).GetComponent<TilePiece>();
-    //        board[jumpedOver.Row, jumpedOver.Column] = newT;
-    //        jumpedOver.gameObject.SetActive(false);
-    //    }
-
-    //    return true;
-    //}
-
-
-
-    //private void MoveSelectedToTile(TilePiece tp)
-    //{
-
-
-    //    TilePiece curTile = GetTile(selectedPiece.Row, selectedPiece.Column);
-    //    selectedPiece.Move(tp);
-    //    tp.MovingPiece = selectedPiece;
-    //    curTile.MovingPiece = null;
-    //}
-
+    
 
 
 
