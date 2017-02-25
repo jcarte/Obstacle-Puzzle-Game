@@ -46,6 +46,9 @@ public class BoardManager : MonoBehaviour {
     //TODO make static / move to factory class
     public void SetupBoard(Level lv)
     {
+
+        GameObject boardCanvas = GameObject.Find("Canvas").transform.FindChild("InGame").transform.FindChild("BoardPanel").gameObject;
+
         lvl = lv;
 
         NumberOfRows = lvl.RowCount;
@@ -53,8 +56,8 @@ public class BoardManager : MonoBehaviour {
         board = new TilePiece[NumberOfRows, NumberOfColumns];
 
         //Rubbish
-        Inputs = ((GameObject)Instantiate(InputListener, new Vector3(0f, 0f, 0f), Quaternion.identity)).GetComponent<InputListener>();
-        
+        Inputs = ((GameObject)Instantiate(InputListener, new Vector3(0f, 0f, 0f), Quaternion.identity,boardCanvas.transform)).GetComponent<InputListener>();
+        //Inputs.transform.parent = boardCanvas.transform;
         
 
         for (int r = 0; r < NumberOfRows; r++)
@@ -120,7 +123,8 @@ public class BoardManager : MonoBehaviour {
                 }
                 
                 //AddTile(go, r, c);
-                TilePiece tp = ((GameObject)Instantiate(go, new Vector3(c, -r, 0f), Quaternion.Euler(0,0, rotation))).GetComponent<TilePiece>();
+                TilePiece tp = ((GameObject)Instantiate(go, new Vector3(c, -r, 0f), Quaternion.Euler(0,0, rotation),boardCanvas.transform)).GetComponent<TilePiece>();
+                //tp.transform.parent = boardCanvas.transform;
 
                 if(ce.Tile.Type == Level.TileType.Redirect)
                 {
@@ -152,7 +156,9 @@ public class BoardManager : MonoBehaviour {
                     }
 
                     //AddTile(mgo, r, c);
-                    MovablePiece mp = ((GameObject)Instantiate(mgo, new Vector3(c, -r, 0f), Quaternion.identity)).GetComponent<MovablePiece>();
+
+                    MovablePiece mp = ((GameObject)Instantiate(mgo, new Vector3(c, -r, 0f), Quaternion.identity,boardCanvas.transform)).GetComponent<MovablePiece>();
+                    //mp.transform.parent = boardCanvas.transform;
                     mp.Move(tp);
                     mp.Clicked +=(s,e) => ChangeSelectedPiece(s as MovablePiece);
                 }
