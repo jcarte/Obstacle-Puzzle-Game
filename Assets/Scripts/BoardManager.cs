@@ -44,17 +44,66 @@ public class BoardManager : MonoBehaviour {
 
     private TilePiece[,] board;
 
+
+    private GameObject boardCanvas;
+
+    private EndOfGameMenu endUI;
+
+    private Camera cam;
+    public void Start()
+    {
+
+        //GameObject canvas = GameObject.Find("Canvas").gameObject;
+        //GameObject inGame = canvas.transform.FindChild("InGame").gameObject;
+        //boardCanvas = inGame.transform.FindChild("BoardPanel").gameObject;
+        ////boardCanvas = GameObject.Find("Canvas").transform.FindChild("InGame").transform.FindChild("BoardPanel").gameObject;
+        //endUI = GameObject.Find("Canvas").transform.FindChild("EndOfGame").GetComponent<EndOfGameMenu>();//get level complete panel object
+        //cam = GameObject.Find("Main Camera").GetComponent<Camera>();
+    }
+
+
     //TODO make static / move to factory class
     public void SetupBoard(Level lv)
     {
 
-        GameObject boardCanvas = GameObject.Find("Canvas").transform.FindChild("InGame").transform.FindChild("BoardPanel").gameObject;
+        GameObject canvas = GameObject.Find("Canvas").gameObject;
+        GameObject inGame = canvas.transform.FindChild("InGame").gameObject;
+        boardCanvas = inGame.transform.FindChild("BoardPanel").gameObject;
+        //boardCanvas = GameObject.Find("Canvas").transform.FindChild("InGame").transform.FindChild("BoardPanel").gameObject;
+        endUI = GameObject.Find("Canvas").transform.FindChild("EndOfGame").GetComponent<EndOfGameMenu>();//get level complete panel object
+        cam = GameObject.Find("Main Camera").GetComponent<Camera>();
+
+        //Clear board
+        foreach (Transform child in boardCanvas.transform)
+        {
+            Destroy(child.gameObject);
+        }
 
         lvl = lv;
+
 
         NumberOfRows = lvl.RowCount;
         NumberOfColumns = lvl.ColumnCount;
         board = new TilePiece[NumberOfRows, NumberOfColumns];
+
+
+        float width = NumberOfColumns;
+        float height = NumberOfRows;
+
+        cam.transform.position = new Vector3((width - 1) * 0.5f, (height - 1) * -0.5f, -10f);
+
+        //cam.orthographicSize = Math.Max((width + 1) / 2, (height + 1) / 2)*2;
+        cam.orthographicSize = (Math.Max(width, height)) / (2 * (width > height ? cam.aspect : 1));//TODO need to account for top UI as will fill whole screen atm
+
+        /*
+         * RowsSeen = 2 * cam.orthographicSize
+         * ColsSeen = RowsSeen * cam.aspect
+         */
+
+
+      
+
+        
 
         //Rubbish
         Inputs = ((GameObject)Instantiate(InputListener, new Vector3(0f, 0f, 0f), Quaternion.identity,boardCanvas.transform)).GetComponent<InputListener>();
@@ -217,6 +266,15 @@ public class BoardManager : MonoBehaviour {
 
     private MovablePiece selectedPiece;
 
+    private void OnFinished(GameResult result)
+    {
+        endUI.Show(MoveCount, result);//TODO move not right shouldn't be handling ui inside the board object
+        if (GameFinished != null)
+        {
+            GameFinished.Invoke(this, result);
+        }
+    }
+
     private void EndTurn()
     {
         MoveCount++;
@@ -226,17 +284,17 @@ public class BoardManager : MonoBehaviour {
         //check if the game has won, if all destinations have been completed
         if(!boardList.Any(t => t.IsDestination && !t.IsCompleted))
         {
-            if (GameFinished != null)
-            {
-                if(MoveCount > lvl.BronzeTarget)
-                    GameFinished.Invoke(this, GameResult.Loss);
+            //if (GameFinished != null)
+            //{
+                if (MoveCount > lvl.BronzeTarget)
+                    OnFinished(GameResult.Loss);// GameFinished.Invoke(this, GameResult.Loss);
                 else if (MoveCount > lvl.SilverTarget)
-                    GameFinished.Invoke(this, GameResult.Bronze);
+                    OnFinished(GameResult.Bronze);// GameFinished.Invoke(this, GameResult.Bronze);
                 else if (MoveCount > lvl.GoldTarget)
-                    GameFinished.Invoke(this, GameResult.Silver);
+                    OnFinished(GameResult.Silver);// GameFinished.Invoke(this, GameResult.Silver);
                 else
-                    GameFinished.Invoke(this, GameResult.Gold);
-            }
+                    OnFinished(GameResult.Gold);// GameFinished.Invoke(this, GameResult.Gold);
+            //}
             
             return;
         }
@@ -252,8 +310,8 @@ public class BoardManager : MonoBehaviour {
             //check if game lost, if there are less moving pieces than destinations
             if (movePieceCount < destinationCount)
             {
-                if (GameFinished != null)
-                    GameFinished.Invoke(this, GameResult.Loss);//TODO is this right?
+                //if (GameFinished != null)
+                    OnFinished(GameResult.Loss);// GameFinished.Invoke(this, GameResult.Loss);//TODO is this right?
                 return;
             }
         }
