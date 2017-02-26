@@ -98,7 +98,7 @@ public class BoardManager : MonoBehaviour {
         cam.transform.position = new Vector3((width - 1) * 0.5f, (height - 1) * -0.5f, -10f);
 
         //cam.orthographicSize = Math.Max((width + 1) / 2, (height + 1) / 2)*2;
-        cam.orthographicSize = (Math.Max(width, height)) / (2 * (width > height ? cam.aspect : 1));//TODO need to account for top UI as will fill whole screen atm
+        cam.orthographicSize = (Math.Max(width, height)) / (2 * (width >= height ? cam.aspect : 1));//TODO need to account for top UI as will fill whole screen atm
 
         /*
          * RowsSeen = 2 * cam.orthographicSize
