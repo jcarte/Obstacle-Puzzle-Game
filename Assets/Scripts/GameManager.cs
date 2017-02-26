@@ -20,19 +20,35 @@ public class GameManager : MonoBehaviour {
         SceneManager.LoadScene("MenuScene");
     }
 
+
+    private Level pendingLevel = null;
+
+    private void LoadPendingLevel()
+    {
+        if (pendingLevel != null)
+        {
+            StartLevel(pendingLevel);
+            pendingLevel = null;
+        }
+    }
+
     private void Awake()
     {
-        if (Instance == null)
-            Instance = this;
-        else if (Instance != this)
+        if (Instance != null)
+        {
             Destroy(gameObject);
+            return;
+        }
 
+        Instance = this;
         boardScript = GetComponent<BoardManager>();
         DontDestroyOnLoad(gameObject);
 
         levels = LevelManager.GetAllLevels();
 
-        StartLevel(1);
+        SceneManager.sceneLoaded += (s, e) => LoadPendingLevel();
+
+        //StartLevel(1);
 
         //StartLevel(LevelManager.GetDemoLevel());//TODO remove
 
@@ -68,13 +84,25 @@ public class GameManager : MonoBehaviour {
         StartLevel(lvl);
     }
 
+    
+
     public void StartLevel(Level lvl)
     {
         if (lvl == null)
             throw new ArgumentException("Level can't be null");
         if (SceneManager.GetActiveScene().name != "GameBoard")
+        {
+            //SceneManager.sceneLoaded += (s, e) => StartLevel(lvl);
+            pendingLevel = lvl;
             SceneManager.LoadScene("GameBoard");
-        boardScript.SetupBoard(lvl);
+
+        }
+        else
+        {
+            //SceneManager.sceneLoaded -= (s, e) => StartLevel(lvl);
+            boardScript.SetupBoard(lvl);
+        }
+        
     }
 
 
