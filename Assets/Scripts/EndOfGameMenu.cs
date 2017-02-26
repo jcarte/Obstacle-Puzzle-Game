@@ -6,15 +6,36 @@ public class EndOfGameMenu : MonoBehaviour {
 
     Text movesTxt;
     Text resultTxt;
-    
-	// Use this for initialization
-	void Start () 
+
+    Button nextLevelButton;
+    Button mainMenuButton;
+    Button tryAgainButton;
+
+    // Use this for initialization
+    public void Init () 
     {
-        movesTxt = transform.Find("ResultMoves").GetComponent<Text>();
-        resultTxt = transform.Find("ResultCup").GetComponent<Text>();
-        gameObject.SetActive(false);
+        movesTxt = transform.FindChild("ResultMoves").GetComponent<Text>();
+        resultTxt = transform.FindChild("ResultCup").GetComponent<Text>();
+
+        tryAgainButton = transform.FindChild("TryAgainButton").GetComponent<Button>();
+
+        GameObject panel = transform.FindChild("EndOfGameMenuBarPanel").gameObject;
+
+        nextLevelButton = panel.transform.FindChild("NextLevelButton").GetComponent<Button>();
+        mainMenuButton = panel.transform.FindChild("MainMenuButton").GetComponent<Button>();
+
+
+        nextLevelButton.onClick.AddListener(delegate () { GameManager.Instance.StartNextLevel(); });
+        mainMenuButton.onClick.AddListener(delegate () { GameManager.Instance.LoadMainMenu(); });
+        tryAgainButton.onClick.AddListener(delegate () { GameManager.Instance.RetryLevel(); });
+
     }
 	
+
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+    }
 
     public void Show(int moveCount, BoardManager.GameResult result)
     {
@@ -26,6 +47,8 @@ public class EndOfGameMenu : MonoBehaviour {
             resultTxt.text = "You earned " + result.ToString();
 
         gameObject.SetActive(true);
+
+        nextLevelButton.gameObject.SetActive(GameManager.Instance.HasNextLevel() && result != BoardManager.GameResult.Loss);
     }
 
     
