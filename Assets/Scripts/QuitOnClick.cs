@@ -11,4 +11,9 @@ public class QuitOnClick : MonoBehaviour {
         Application.Quit();
 #endif
     }
+
+    public void GoToWebpage()
+    {
+        Application.OpenURL("https://www.facebook.com/jicolastudios/");
+    }
 }
