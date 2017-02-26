@@ -6,15 +6,23 @@ public class EndOfGameMenu : MonoBehaviour {
 
     Text movesTxt;
     Text resultTxt;
+
+    GameObject nextLevelButton;
     
+
 	// Use this for initialization
-	void Start () 
+	public void Init () 
     {
-        movesTxt = transform.Find("ResultMoves").GetComponent<Text>();
-        resultTxt = transform.Find("ResultCup").GetComponent<Text>();
-        gameObject.SetActive(false);
+        movesTxt = transform.FindChild("ResultMoves").GetComponent<Text>();
+        resultTxt = transform.FindChild("ResultCup").GetComponent<Text>();
+        nextLevelButton = transform.FindChild("EndOfGameMenuBarPanel").transform.FindChild("NextLevelButton").gameObject;
     }
 	
+
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+    }
 
     public void Show(int moveCount, BoardManager.GameResult result)
     {
@@ -26,6 +34,8 @@ public class EndOfGameMenu : MonoBehaviour {
             resultTxt.text = "You earned " + result.ToString();
 
         gameObject.SetActive(true);
+
+        nextLevelButton.SetActive(GameManager.Instance.HasNextLevel() && result != BoardManager.GameResult.Loss);
     }
 
     

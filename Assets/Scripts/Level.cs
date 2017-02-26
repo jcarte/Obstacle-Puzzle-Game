@@ -4,6 +4,16 @@
 public class Level
 {
     /// <summary>
+    /// Unique Id for this level
+    /// </summary>
+    public int LevelID;
+
+    /// <summary>
+    /// Descriptive name for the level
+    /// </summary>
+    public string Name;
+
+    /// <summary>
     /// Number of rows of tiles in a level
     /// </summary>
     public int RowCount;
@@ -33,29 +43,61 @@ public class Level
     /// </summary>
     public int GoldTarget;
 
-
     /// <summary>
-    /// Create a new object with given dimensions
+    /// Creates a new level
     /// </summary>
-    /// <param name="rows"></param>
-    /// <param name="cols"></param>
+    /// <param name="rows">Number of cells high for the whole board</param>
+    /// <param name="cols">Number of cells across for the whole board</param>
     /// <returns></returns>
     public static Level Create(int rows, int cols)
     {
-        Level b = new Level();
-        b.RowCount = rows;
-        b.ColumnCount = cols;
-        b.Array = new CellRow[rows];
+        return Create(rows, cols, 0, 0, 0, 0);
+    }
+
+    /// <summary>
+    /// Creates a new level
+    /// </summary>
+    /// <param name="rows">Number of cells high for the whole board</param>
+    /// <param name="cols">Number of cells across for the whole board</param>
+    /// <param name="levelID">Unique id for the level</param>
+    /// <returns></returns>
+    public static Level Create(int rows, int cols, int levelID)
+    {
+        return Create(rows, cols, levelID, 0, 0, 0);
+    }
+
+
+    /// <summary>
+    /// Creates a new level
+    /// </summary>
+    /// <param name="rows">Number of cells high for the whole board</param>
+    /// <param name="cols">Number of cells across for the whole board</param>
+    /// <param name="levelID">Unique id for the level</param>
+    /// <param name="bronzeTarget">Number of moves to receive a bronze medal</param>
+    /// <param name="silverTarget">Number of moves to receive a silver medal</param>
+    /// <param name="goldTarget">Number of moves to receive a gold medal</param>
+    /// <returns></returns>
+    public static Level Create(int rows, int cols, int levelID, int bronzeTarget, int silverTarget, int goldTarget)
+    {
+        Level lvl = new Level();
+        lvl.LevelID = levelID;
+        lvl.Name = "Level " + levelID;// string.Format("00", levelID);
+        lvl.BronzeTarget = bronzeTarget;
+        lvl.SilverTarget = silverTarget;
+        lvl.GoldTarget = goldTarget;
+        lvl.RowCount = rows;
+        lvl.ColumnCount = cols;
+        lvl.Array = new CellRow[rows];
 
         for (int r = 0; r < rows; r++)
         {
             //Create a new row with col number of cells
-            b.Array[r] = new CellRow() { Cells = new Cell[cols] };
+            lvl.Array[r] = new CellRow() { Cells = new Cell[cols] };
 
             //Fill every cell in every row with new blank tiles to start off
             for (int c = 0; c < cols; c++)
             {
-                b.Array[r].Cells[c] = new Cell()
+                lvl.Array[r].Cells[c] = new Cell()
                 {
                     Tile = new Tile()
                     {
@@ -64,8 +106,10 @@ public class Level
                 };
             }
         }
-        return b;
+        return lvl;
     }
+
+
 
     /// <summary>
     /// Alter a tile at a given location

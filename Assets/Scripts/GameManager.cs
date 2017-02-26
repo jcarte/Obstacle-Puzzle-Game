@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.Reflection;
 
 public class GameManager : MonoBehaviour {
 
@@ -12,6 +13,7 @@ public class GameManager : MonoBehaviour {
 
     public static GameManager Instance = null;
 
+    private List<Level> levels;
 
     public void LoadMainMenu()
     {
@@ -28,7 +30,11 @@ public class GameManager : MonoBehaviour {
         boardScript = GetComponent<BoardManager>();
         DontDestroyOnLoad(gameObject);
 
-        StartLevel(GetDemoLevel());//TODO remove
+        levels = LevelManager.GetAllLevels();
+
+        StartLevel(1);
+
+        //StartLevel(LevelManager.GetDemoLevel());//TODO remove
 
         //InitGame();
     }
@@ -39,16 +45,27 @@ public class GameManager : MonoBehaviour {
         StartLevel(boardScript.lvl);
     }
 
-    public void StartLevel(string name)
+
+    public bool HasNextLevel()
     {
-        throw new NotImplementedException();//TODO get file from name, convert to Level put into StartLevel
+        if (boardScript != null && boardScript.lvl != null && boardScript.lvl.LevelID != 0)
+        {
+            return levels.Any(l => l.LevelID == boardScript.lvl.LevelID + 1);
+        }
+        else
+            return false;
+        
+    }
 
-        //    //string path = "Levels\\Level1.DAT";
-        //    //LevelManager.SaveLevel(v1, path);
+    public void StartNextLevel()
+    {
+        StartLevel(boardScript.lvl.LevelID + 1);
+    }
 
-        //    //Level lvl = LevelManager.RestoreLevel(path);
-        //    Level lvl = v1;
-
+    public void StartLevel(int levelID)
+    {
+        Level lvl = levels.FirstOrDefault(l => l.LevelID == levelID);
+        StartLevel(lvl);
     }
 
     public void StartLevel(Level lvl)
@@ -125,168 +142,6 @@ public class GameManager : MonoBehaviour {
 
     //}
 
-    #region StaticLevels
-    private static Level GetDemoLevel()
-    {
-        //Demo Level
-        Level v1 = Level.Create(3, 5);
-        v1.BronzeTarget = 11;
-        v1.SilverTarget = 9;
-        v1.GoldTarget = 7;
-
-        v1.ChangeTile(0, 0, Level.TileType.Destination, Level.ColourType.Blue);
-        v1.AddMovable(0, 0, Level.ColourType.Red);
-        v1.ChangeTile(0, 1, Level.TileType.Landing);
-        v1.ChangeTile(0, 2, Level.TileType.Landing);
-        v1.ChangeTile(0, 3, Level.TileType.Landing);
-        v1.ChangeTile(1, 1, Level.TileType.Landing);
-        v1.ChangeTile(1, 3, Level.TileType.Landing);
-        v1.ChangeTile(0, 4, Level.TileType.Destination, Level.ColourType.Red);
-        v1.AddMovable(0, 4, Level.ColourType.Blue);
-        v1.ChangeTile(1, 2, Level.TileType.Enemy);
-
-
-        v1.ChangeTile(2, 0, Level.TileType.Landing);
-        v1.ChangeTile(2, 4, Level.TileType.Landing);
-
-        return v1;
-    }
-
-    private static Level GetTestLevel()
-    {
-        Level v1 = Level.Create(20, 5);
-        //0
-        v1.ChangeTile(0, 0, Level.TileType.Landing);
-        v1.AddMovable(0, 0, Level.ColourType.Blue);
-        v1.ChangeTile(0, 2, Level.TileType.Landing);
-        v1.ChangeTile(0, 4, Level.TileType.Obstacle);
-
-        //1
-        v1.ChangeTile(1, 0, Level.TileType.Landing);
-        v1.AddMovable(1, 0, Level.ColourType.Yellow);
-        v1.ChangeTile(1, 1, Level.TileType.Landing);
-        v1.AddMovable(1, 1, Level.ColourType.Red);
-        v1.ChangeTile(1, 2, Level.TileType.Landing);
-
-        //2
-        v1.ChangeTile(2, 0, Level.TileType.Landing);
-        v1.AddMovable(2, 0, Level.ColourType.Green);
-        v1.ChangeTile(2, 1, Level.TileType.FakeDisappearing);
-        v1.ChangeTile(2, 2, Level.TileType.Redirect, 0, 1);
-        v1.ChangeTile(2, 3, Level.TileType.Redirect, 0, 1);
-        v1.ChangeTile(2, 4, Level.TileType.Obstacle);
-
-        //3
-        v1.ChangeTile(3, 0, Level.TileType.Landing);
-        v1.AddMovable(3, 0, Level.ColourType.Red);
-        v1.ChangeTile(3, 1, Level.TileType.NonLanding);
-        v1.ChangeTile(3, 2, Level.TileType.Landing);
-        v1.ChangeTile(3, 3, Level.TileType.Enemy);
-        v1.ChangeTile(3, 4, Level.TileType.Landing);
-
-        //4
-        v1.ChangeTile(4, 0, Level.TileType.Landing);
-        v1.AddMovable(4, 0, Level.ColourType.Blue);
-        v1.ChangeTile(4, 1, Level.TileType.Disappearing);
-
-        //5
-        v1.ChangeTile(5, 0, Level.TileType.Landing);
-        v1.AddMovable(5, 0, Level.ColourType.Blue);
-        v1.ChangeTile(5, 1, Level.TileType.Obstacle);
-
-        //6
-        v1.ChangeTile(6, 0, Level.TileType.Landing);
-        v1.AddMovable(6, 0, Level.ColourType.Green);
-        v1.ChangeTile(6, 1, Level.TileType.Redirect, 0, 1);
-        v1.ChangeTile(6, 2, Level.TileType.Landing);
-
-        //7
-        v1.ChangeTile(7, 0, Level.TileType.Landing);
-        v1.AddMovable(7, 0, Level.ColourType.Red);
-        v1.ChangeTile(7, 1, Level.TileType.Enemy);
-
-        //8
-        v1.ChangeTile(8, 0, Level.TileType.Landing);
-        v1.AddMovable(8, 0, Level.ColourType.Yellow);
-        v1.ChangeTile(8, 1, Level.TileType.Redirect, 0, 1);
-        v1.ChangeTile(8, 2, Level.TileType.Redirect, 0, 1);
-        v1.ChangeTile(8, 3, Level.TileType.Disappearing);
-
-        //9
-        v1.ChangeTile(9, 0, Level.TileType.Landing);
-        v1.AddMovable(9, 0, Level.ColourType.Blue);
-        v1.ChangeTile(9, 1, Level.TileType.Redirect, 0, 1);
-        v1.ChangeTile(9, 2, Level.TileType.Redirect, 0, 1);
-        v1.ChangeTile(9, 4, Level.TileType.NonLanding);
-
-        //10
-        v1.ChangeTile(10, 0, Level.TileType.Landing);
-        v1.AddMovable(10, 0, Level.ColourType.Green);
-        v1.ChangeTile(10, 1, Level.TileType.Redirect, 0, 1);
-        v1.ChangeTile(10, 2, Level.TileType.Redirect, 0, 1);
-        v1.ChangeTile(10, 4, Level.TileType.Disappearing);
-
-        //11
-        v1.ChangeTile(11, 0, Level.TileType.Landing);
-        v1.AddMovable(11, 0, Level.ColourType.Red);
-        v1.ChangeTile(11, 1, Level.TileType.Redirect, 0, 1);
-        v1.ChangeTile(11, 2, Level.TileType.Landing);
-        v1.AddMovable(11, 2, Level.ColourType.Green);
-        v1.ChangeTile(11, 3, Level.TileType.Redirect, 0, 1);
-        v1.ChangeTile(11, 4, Level.TileType.Enemy);
-
-        //12
-        v1.ChangeTile(12, 0, Level.TileType.Landing);
-        v1.AddMovable(12, 0, Level.ColourType.Yellow);
-        v1.ChangeTile(12, 1, Level.TileType.Redirect, 0, 1);
-        v1.ChangeTile(12, 2, Level.TileType.Landing);
-        v1.AddMovable(12, 2, Level.ColourType.Blue);
-        v1.ChangeTile(12, 3, Level.TileType.Redirect, 0, 1);
-        v1.ChangeTile(12, 4, Level.TileType.FakeDisappearing);
-
-        //13
-        v1.ChangeTile(13, 0, Level.TileType.Landing);
-        v1.AddMovable(13, 0, Level.ColourType.Blue);
-        v1.ChangeTile(13, 2, Level.TileType.NonLanding);
-
-        //14
-        v1.ChangeTile(14, 0, Level.TileType.Landing);
-        v1.AddMovable(14, 0, Level.ColourType.Green);
-        v1.ChangeTile(14, 1, Level.TileType.Landing);
-        v1.AddMovable(14, 1, Level.ColourType.Red);
-        v1.ChangeTile(14, 2, Level.TileType.Disappearing);
-
-        //15
-        v1.ChangeTile(15, 0, Level.TileType.Landing);
-        v1.AddMovable(15, 0, Level.ColourType.Yellow);
-        v1.ChangeTile(15, 1, Level.TileType.Enemy);
-        v1.ChangeTile(15, 2, Level.TileType.Disappearing);
-
-        //16
-        v1.ChangeTile(16, 0, Level.TileType.Landing);
-        v1.AddMovable(16, 0, Level.ColourType.Blue);
-        v1.ChangeTile(16, 1, Level.TileType.Enemy);
-        v1.ChangeTile(16, 2, Level.TileType.Redirect, 0, 1);
-
-        //17
-        v1.ChangeTile(17, 0, Level.TileType.Landing);
-        v1.AddMovable(17, 0, Level.ColourType.Green);
-
-        //18
-        v1.ChangeTile(18, 0, Level.TileType.Landing);
-        v1.AddMovable(18, 0, Level.ColourType.Red);
-        v1.ChangeTile(18, 1, Level.TileType.Redirect, 0, 1);
-        v1.ChangeTile(18, 3, Level.TileType.Redirect, 0, 1);
-        v1.ChangeTile(18, 4, Level.TileType.Redirect, 1, 0);
-        v1.ChangeTile(19, 4, Level.TileType.Redirect, 0, -1);
-        v1.ChangeTile(19, 3, Level.TileType.NonLanding);
-        v1.ChangeTile(19, 2, Level.TileType.Redirect, 0, -1);
-        v1.ChangeTile(19, 1, Level.TileType.Redirect, 0, -1);
-        v1.ChangeTile(19, 0, Level.TileType.Redirect, -1, 0);
-
-        return v1;
-    }
-    #endregion
 }
 
 

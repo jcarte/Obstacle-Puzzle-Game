@@ -73,6 +73,11 @@ public class BoardManager : MonoBehaviour {
         endUI = GameObject.Find("Canvas").transform.FindChild("EndOfGame").GetComponent<EndOfGameMenu>();//get level complete panel object
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
 
+    
+
+        endUI.Init();
+        endUI.Hide();
+
         //Clear board
         foreach (Transform child in boardCanvas.transform)
         {
@@ -81,7 +86,7 @@ public class BoardManager : MonoBehaviour {
 
         lvl = lv;
 
-
+        MoveCount = 0;
         NumberOfRows = lvl.RowCount;
         NumberOfColumns = lvl.ColumnCount;
         board = new TilePiece[NumberOfRows, NumberOfColumns];
