@@ -11,6 +11,8 @@ public class EndOfGameMenu : MonoBehaviour {
     Button mainMenuButton;
     Button tryAgainButton;
 
+    GameObject lastPage;
+
     // Use this for initialization
     public void Init () 
     {
@@ -24,11 +26,11 @@ public class EndOfGameMenu : MonoBehaviour {
         nextLevelButton = panel.transform.FindChild("NextLevelButton").GetComponent<Button>();
         mainMenuButton = panel.transform.FindChild("MainMenuButton").GetComponent<Button>();
 
+        lastPage = transform.FindChild("LastPage").gameObject;
 
         nextLevelButton.onClick.AddListener(delegate () { GameManager.Instance.StartNextLevel(); });
         mainMenuButton.onClick.AddListener(delegate () { GameManager.Instance.LoadMainMenu(); });
         tryAgainButton.onClick.AddListener(delegate () { GameManager.Instance.RetryLevel(); });
-
     }
 	
 
@@ -48,7 +50,23 @@ public class EndOfGameMenu : MonoBehaviour {
 
         gameObject.SetActive(true);
 
-        nextLevelButton.gameObject.SetActive(GameManager.Instance.HasNextLevel() && result != BoardManager.GameResult.Loss);
+        if(result != BoardManager.GameResult.Loss)
+        {
+            if(GameManager.Instance.HasNextLevel())
+            {
+                nextLevelButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                //Hide();
+                lastPage.gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            nextLevelButton.gameObject.SetActive(false);
+        }
+            
     }
 
     
