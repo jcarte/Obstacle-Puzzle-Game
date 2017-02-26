@@ -44,10 +44,12 @@ public class BoardManager : MonoBehaviour {
 
     private TilePiece[,] board;
 
+    //public Action MoveCompleted;
 
     private GameObject boardCanvas;
 
     private EndOfGameMenu endUI;
+    private InGameUI gameUI;
 
     private Camera cam;
     public void Start()
@@ -70,13 +72,16 @@ public class BoardManager : MonoBehaviour {
         GameObject inGame = canvas.transform.FindChild("InGame").gameObject;
         boardCanvas = inGame.transform.FindChild("BoardPanel").gameObject;
         //boardCanvas = GameObject.Find("Canvas").transform.FindChild("InGame").transform.FindChild("BoardPanel").gameObject;
-        endUI = GameObject.Find("Canvas").transform.FindChild("EndOfGame").GetComponent<EndOfGameMenu>();//get level complete panel object
+        endUI = canvas.transform.FindChild("EndOfGame").GetComponent<EndOfGameMenu>();//get level complete panel object
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
+        gameUI = canvas.transform.FindChild("InGame").GetComponent<InGameUI>();
 
-    
 
         endUI.Init();
         endUI.Hide();
+        gameUI.Init();
+        gameUI.SetLevelNameText(lv.Name);
+        gameUI.SetMoveText(0);
 
         //Clear board
         foreach (Transform child in boardCanvas.transform)
@@ -91,28 +96,72 @@ public class BoardManager : MonoBehaviour {
         NumberOfColumns = lvl.ColumnCount;
         board = new TilePiece[NumberOfRows, NumberOfColumns];
 
+        
 
-        float width = NumberOfColumns;
-        float height = NumberOfRows;
 
-        cam.transform.position = new Vector3((width - 1) * 0.5f, (height - 1) * -0.5f, -10f);
 
-        //cam.orthographicSize = Math.Max((width + 1) / 2, (height + 1) / 2)*2;
-        cam.orthographicSize = (Math.Max(width, height)) / (2 * (width >= height ? cam.aspect : 1));//TODO need to account for top UI as will fill whole screen atm
 
-        /*
+        //Camera Zooming and positioning - Nicolas Magic
+        float screenWidth = 1080;
+        float screenHeight = 1920 - (150 * 2);
+
+        float spriteSize = 280;
+
+        float boardWidth = spriteSize * NumberOfColumns;
+        float boardHeight = spriteSize * NumberOfRows;
+
+        float widthRatio = screenWidth / boardWidth;
+        float heightRatio = screenHeight / boardHeight;
+
+        cam.transform.position = new Vector3((NumberOfColumns - 1) * 0.5f, (NumberOfRows - 1) * -0.5f, -10f);
+
+        if (widthRatio >= heightRatio) //shows that we need to deal with height only to determine the layout and vv 
+        {
+            float RowsSeen = NumberOfRows + (500f / spriteSize);
+            cam.orthographicSize = RowsSeen / 2f;
+        }
+        else
+        {
+            float RowsSeen = NumberOfColumns / cam.aspect;
+            cam.orthographicSize = RowsSeen / 2f;
+        }
+
+
+
+
+
+        #region OldCameraZoom
+
+        //float width = NumberOfColumns;
+        //float height = NumberOfRows;
+
+        //cam.transform.position = new Vector3((width - 1) * 0.5f, (height - 1) * -0.5f, -10f);
+
+        //if (width >= height)//square or fat and short
+        //{
+        //    cam.orthographicSize = Math.Max(width, height) / (2 * cam.aspect);
+        //}
+        //else//tall - need to take account of UI at top at bottom (150px each, 300 total)
+        //{
+        //    cam.orthographicSize = Math.Max(width, height) * 0.5f * (1f + (300f / cam.pixelHeight));
+        //}
+        //cam.orthographicSize = Math.Max((width + 1) / 2, (height + 1) / 2) * 2;
+        //cam.orthographicSize = (Math.Max(width, height)) / (2 * (width >= height ? cam.aspect : 1));
+
+        #endregion
+
+
+        /*RULES
          * RowsSeen = 2 * cam.orthographicSize
          * ColsSeen = RowsSeen * cam.aspect
          */
 
 
-      
 
-        
 
-        //Rubbish
+
+
         Inputs = ((GameObject)Instantiate(InputListener, new Vector3(0f, 0f, 0f), Quaternion.identity,boardCanvas.transform)).GetComponent<InputListener>();
-        //Inputs.transform.parent = boardCanvas.transform;
         
 
         for (int r = 0; r < NumberOfRows; r++)
@@ -283,6 +332,9 @@ public class BoardManager : MonoBehaviour {
     private void EndTurn()
     {
         MoveCount++;
+
+        //TODO move elsewhere, need event system?
+        gameUI.SetMoveText(MoveCount);
 
         List<TilePiece> boardList = board.Cast<TilePiece>().ToList();
 

@@ -48,11 +48,10 @@ public class GameManager : MonoBehaviour {
 
         SceneManager.sceneLoaded += (s, e) => LoadPendingLevel();
 
+        //TODO remove
         //StartLevel(1);
-
-        //StartLevel(LevelManager.GetDemoLevel());//TODO remove
-
-        //InitGame();
+        //StartLevel(LevelManager.GetDemoLevel());
+        StartLevel(LevelManager.GenerateBlankLevel(5, 10));
     }
 
 
