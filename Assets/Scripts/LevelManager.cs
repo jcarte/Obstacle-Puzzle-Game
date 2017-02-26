@@ -240,7 +240,7 @@ public class LevelManager
 
     public static Level GetLevel10()
     {
-        Level lvl = Level.Create(rows: 5, cols: 5, levelID: 10, bronzeTarget: 14, silverTarget: 12, goldTarget: 10);//TODO placeholder, complete all levels properly
+        Level lvl = Level.Create(rows: 5, cols: 5, levelID: 10, bronzeTarget: 14, silverTarget: 12, goldTarget: 11);//TODO placeholder, complete all levels properly
 
         //Frogs
         lvl.AddMovable(0, 2, Level.ColourType.Red);
