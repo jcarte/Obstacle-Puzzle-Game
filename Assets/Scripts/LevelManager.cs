@@ -450,6 +450,20 @@ public class LevelManager
     }
     #endregion
 
+
+    public static Level GenerateBlankLevel(int rows, int cols)
+    {
+        Level lvl = Level.Create(rows, cols);
+        for (int r = 0; r < rows; r++)
+        {
+            for (int c = 0; c < cols; c++)
+            {
+                lvl.ChangeTile(r, c, Level.TileType.Landing);
+            }
+        }
+        return lvl;
+    }
+
 }
 
 
