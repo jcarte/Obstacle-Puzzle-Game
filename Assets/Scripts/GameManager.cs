@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour {
         //TODO remove
         //StartLevel(1);
         //StartLevel(LevelManager.GetDemoLevel());
-        StartLevel(LevelManager.GenerateBlankLevel(11, 5));
+        StartLevel(LevelManager.GenerateBlankLevel(5, 10));
     }
 
 

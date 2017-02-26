@@ -96,47 +96,62 @@ public class BoardManager : MonoBehaviour {
         NumberOfColumns = lvl.ColumnCount;
         board = new TilePiece[NumberOfRows, NumberOfColumns];
 
+        
 
-        float boardWidth = NumberOfColumns;
-        float boardHeight = NumberOfRows;
 
-        float screenAspect = cam.pixelWidth / (cam.pixelHeight - 300);
-        float boardAspect = boardWidth / boardHeight;
 
-        //set camera at centre of board
-        cam.transform.position = new Vector3((boardWidth - 1) * 0.5f, (boardHeight - 1) * -0.5f, -10f);
 
-        if (boardAspect >= screenAspect)//square or fat and short
+        //Camera Zooming and positioning - Nicolas Magic
+        float screenWidth = 1080;
+        float screenHeight = 1920 - (150 * 2);
+
+        float spriteSize = 280;
+
+        float boardWidth = spriteSize * NumberOfColumns;
+        float boardHeight = spriteSize * NumberOfRows;
+
+        float widthRatio = screenWidth / boardWidth;
+        float heightRatio = screenHeight / boardHeight;
+
+        cam.transform.position = new Vector3((NumberOfColumns - 1) * 0.5f, (NumberOfRows - 1) * -0.5f, -10f);
+
+        if (widthRatio >= heightRatio) //shows that we need to deal with height only to determine the layout and vv 
         {
-            cam.orthographicSize = Math.Max(boardWidth, boardHeight) / (2 * cam.aspect);
+            float RowsSeen = NumberOfRows + (500f / spriteSize);
+            cam.orthographicSize = RowsSeen / 2f;
         }
-        else//tall - need to take account of UI at top at bottom (150px each, 300 total)
+        else
         {
-            cam.orthographicSize = Math.Max(boardWidth, boardHeight) * 0.5f * (1f + (300f / cam.pixelHeight));
+            float RowsSeen = NumberOfColumns / cam.aspect;
+            cam.orthographicSize = RowsSeen / 2f;
         }
 
 
+
+
+
+        #region OldCameraZoom
 
         //float width = NumberOfColumns;
         //float height = NumberOfRows;
 
         //cam.transform.position = new Vector3((width - 1) * 0.5f, (height - 1) * -0.5f, -10f);
 
-        //if(width>= height)//square or fat and short
+        //if (width >= height)//square or fat and short
         //{
         //    cam.orthographicSize = Math.Max(width, height) / (2 * cam.aspect);
         //}
         //else//tall - need to take account of UI at top at bottom (150px each, 300 total)
         //{
-        //    cam.orthographicSize = Math.Max(width, height) * 0.5f * (1f+(300f / cam.pixelHeight));
+        //    cam.orthographicSize = Math.Max(width, height) * 0.5f * (1f + (300f / cam.pixelHeight));
         //}
-        //cam.orthographicSize = Math.Max((width + 1) / 2, (height + 1) / 2)*2;
+        //cam.orthographicSize = Math.Max((width + 1) / 2, (height + 1) / 2) * 2;
         //cam.orthographicSize = (Math.Max(width, height)) / (2 * (width >= height ? cam.aspect : 1));
 
+        #endregion
 
 
-
-        /*
+        /*RULES
          * RowsSeen = 2 * cam.orthographicSize
          * ColsSeen = RowsSeen * cam.aspect
          */
@@ -146,9 +161,7 @@ public class BoardManager : MonoBehaviour {
 
 
 
-        //Rubbish
         Inputs = ((GameObject)Instantiate(InputListener, new Vector3(0f, 0f, 0f), Quaternion.identity,boardCanvas.transform)).GetComponent<InputListener>();
-        //Inputs.transform.parent = boardCanvas.transform;
         
 
         for (int r = 0; r < NumberOfRows; r++)
