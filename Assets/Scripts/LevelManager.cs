@@ -12,72 +12,262 @@ public class LevelManager
     #region GameLevels
     public static Level GetLevel01()
     {
-        //Level lvl = Level.Create(rows: 10, cols: 10, levelID: 1, bronzeTarget: 11, silverTarget: 9, goldTarget: 7);//TODO placeholder, complete all levels properly
+        Level lvl = Level.Create(rows: 3, cols: 1, levelID: 1, bronzeTarget: 7, silverTarget: 5, goldTarget: 3);//TODO placeholder, complete all levels properly
 
-        //lvl.ChangeTile(0, 0, Level.TileType.Landing);
-        //lvl.ChangeTile(0, 0, Level.TileType.Destination, Level.ColourType.Red);
-        //lvl.AddMovable(0, 0, Level.ColourType.Red);
+        //Frogs
+        lvl.AddMovable(2, 0, Level.ColourType.Red);
+        lvl.AddMovable(0, 0, Level.ColourType.Blue);
+        //Desintations
+        lvl.ChangeTile(0, 0, Level.TileType.Destination, Level.ColourType.Red);
+        lvl.ChangeTile(2, 0, Level.TileType.Destination, Level.ColourType.Blue);
+        //Landing pads
+        lvl.ChangeTile(1, 0, Level.TileType.Landing);
+        //Flower pads
+        //logs
+        //disappearing logs
+        //rocks
+        //fountains
+        //birds
 
-        //return lvl;
-
-        Level lvl = GetDemoLevel();
-        lvl.LevelID = 1;
-        lvl.BronzeTarget = 15;
-        lvl.SilverTarget = 10;
-        lvl.GoldTarget = 8;
-        return lvl;
+        return lvl;        
     }
 
     public static Level GetLevel02()
     {
-        //return Level.Create(0, 0);
-        Level lvl = GetDemoLevel();
-        lvl.LevelID = 2;
-        lvl.BronzeTarget = 14;
-        lvl.SilverTarget = 12;
-        lvl.GoldTarget = 10;
+        Level lvl = Level.Create(rows: 4, cols: 1, levelID: 2, bronzeTarget: 9, silverTarget: 7, goldTarget: 5);//TODO placeholder, complete all levels properly
+
+        //Frogs
+        lvl.AddMovable(3, 0, Level.ColourType.Red);
+        lvl.AddMovable(0, 0, Level.ColourType.Blue);
+        lvl.AddMovable(1, 0, Level.ColourType.Blue);
+        //Desintations
+        lvl.ChangeTile(0, 0, Level.TileType.Destination, Level.ColourType.Red);
+        lvl.ChangeTile(2, 0, Level.TileType.Destination, Level.ColourType.Blue);
+        lvl.ChangeTile(3, 0, Level.TileType.Destination, Level.ColourType.Blue);
+        //Landing pads
+        lvl.ChangeTile(2, 0, Level.TileType.Landing);
+        //Flower pads
+        //logs
+        //disappearing logs
+        //rocks
+        //fountains
+        //birds
+
         return lvl;
     }
 
-    //public static Level GetLevel03()
-    //{
-    //    return Level.Create(0, 0);
-    //}
+    public static Level GetLevel03()
+    {
+        Level lvl = Level.Create(rows: 3, cols: 1, levelID: 3, bronzeTarget: 14, silverTarget: 12, goldTarget: 10);//TODO placeholder, complete all levels properly
 
-    //public static Level GetLevel04()
-    //{
-    //    return Level.Create(0, 0);
-    //}
+        //Frogs
+        lvl.AddMovable(4, 0, Level.ColourType.Red);
+        lvl.AddMovable(3, 0, Level.ColourType.Red);
+        lvl.AddMovable(0, 0, Level.ColourType.Blue);
+        lvl.AddMovable(1, 0, Level.ColourType.Blue);
+        //Desintations
+        lvl.ChangeTile(0, 0, Level.TileType.Destination, Level.ColourType.Red);
+        lvl.ChangeTile(1, 0, Level.TileType.Destination, Level.ColourType.Red);
+        lvl.ChangeTile(4, 0, Level.TileType.Destination, Level.ColourType.Blue);
+        lvl.ChangeTile(3, 0, Level.TileType.Destination, Level.ColourType.Blue);
+        //Landing pads
+        lvl.ChangeTile(2, 0, Level.TileType.Landing);
+        //Flower pads
+        //logs
+        //disappearing logs
+        //rocks
+        //fountains
+        //birds
 
-    //public static Level GetLevel05()
-    //{
-    //    return Level.Create(0, 0);
-    //}
+        return lvl;
+    }
 
-    //public static Level GetLevel06()
-    //{
-    //    return Level.Create(0, 0);
-    //}
+    public static Level GetLevel04()
+    {
+        Level lvl = Level.Create(rows: 3, cols: 1, levelID: 4, bronzeTarget: 13, silverTarget: 11, goldTarget: 9);//TODO placeholder, complete all levels properly
 
-    //public static Level GetLevel07()
-    //{
-    //    return Level.Create(0, 0);
-    //}
+        //Frogs
+        lvl.AddMovable(0, 0, Level.ColourType.Red);
+        lvl.AddMovable(1, 0, Level.ColourType.Red);
+        lvl.AddMovable(2, 0, Level.ColourType.Blue);
+        lvl.AddMovable(3, 0, Level.ColourType.Blue);
+        //Desintations
+        lvl.ChangeTile(2, 0, Level.TileType.Destination, Level.ColourType.Red);
+        lvl.ChangeTile(3, 0, Level.TileType.Destination, Level.ColourType.Red);
+        lvl.ChangeTile(0, 0, Level.TileType.Destination, Level.ColourType.Blue);
+        lvl.ChangeTile(1, 0, Level.TileType.Destination, Level.ColourType.Blue);
+        //Landing pads
+        lvl.ChangeTile(2, 0, Level.TileType.Landing);
+        lvl.ChangeTile(2, 2, Level.TileType.Landing);
+        //Flower pads
+        //logs
+        //disappearing logs
+        //rocks
+        //fountains
+        //birds
 
-    //public static Level GetLevel08()
-    //{
-    //    return Level.Create(0, 0);
-    //}
+        return lvl;
+    }
 
-    //public static Level GetLevel09()
-    //{
-    //    return Level.Create(0, 0);
-    //}
+    public static Level GetLevel05()
+    {
+        Level lvl = Level.Create(rows: 3, cols: 1, levelID: 5, bronzeTarget: 11, silverTarget: 9, goldTarget: 7);//TODO placeholder, complete all levels properly
 
-    //public static Level GetLevel10()
-    //{
-    //    return Level.Create(0, 0);
-    //}
+        //Frogs
+        lvl.AddMovable(0, 0, Level.ColourType.Red);
+        lvl.AddMovable(2, 1, Level.ColourType.Blue);
+        lvl.AddMovable(2, 2, Level.ColourType.Blue);
+        //Desintations
+        lvl.ChangeTile(2, 2, Level.TileType.Destination, Level.ColourType.Red);
+        lvl.ChangeTile(0, 0, Level.TileType.Destination, Level.ColourType.Blue);
+        lvl.ChangeTile(1, 0, Level.TileType.Destination, Level.ColourType.Blue);
+        //Landing pads
+        lvl.ChangeTile(1, 0, Level.TileType.Landing);
+        lvl.ChangeTile(2, 0, Level.TileType.Landing);
+        //Flower pads
+        //logs
+        //disappearing logs
+        //rocks
+        //fountains
+        //birds
+
+        return lvl;
+    }
+
+    public static Level GetLevel06()
+    {
+        Level lvl = Level.Create(rows: 3, cols: 1, levelID: 6, bronzeTarget: 12, silverTarget: 10, goldTarget: 8);//TODO placeholder, complete all levels properly
+
+        //Frogs
+        lvl.AddMovable(0, 0, Level.ColourType.Red);
+        lvl.AddMovable(4, 0, Level.ColourType.Blue);
+        lvl.AddMovable(2, 2, Level.ColourType.Blue);
+        //Desintations
+        lvl.ChangeTile(2, 2, Level.TileType.Destination, Level.ColourType.Red);
+        lvl.ChangeTile(0, 0, Level.TileType.Destination, Level.ColourType.Blue);
+        lvl.ChangeTile(1, 0, Level.TileType.Destination, Level.ColourType.Blue);
+        //Landing pads
+        lvl.ChangeTile(1, 0, Level.TileType.Landing);
+        lvl.ChangeTile(2, 0, Level.TileType.Landing);
+        lvl.ChangeTile(3, 0, Level.TileType.Landing);
+        lvl.ChangeTile(2, 1, Level.TileType.Landing);
+        //Flower pads
+        //logs
+        //disappearing logs
+        //rocks
+        //fountains
+        //birds
+
+        return lvl;
+    }
+
+    public static Level GetLevel07()
+    {
+        Level lvl = Level.Create(rows: 3, cols: 1, levelID: 7, bronzeTarget: 15, silverTarget: 13, goldTarget: 11);//TODO placeholder, complete all levels properly
+
+        //Frogs
+        lvl.AddMovable(0, 0, Level.ColourType.Red);
+        lvl.AddMovable(4, 0, Level.ColourType.Blue);
+        lvl.AddMovable(5, 0, Level.ColourType.Blue);
+        lvl.AddMovable(6, 0, Level.ColourType.Blue);
+        //Desintations
+        lvl.ChangeTile(6, 0, Level.TileType.Destination, Level.ColourType.Red);
+        lvl.ChangeTile(0, 0, Level.TileType.Destination, Level.ColourType.Blue);
+        lvl.ChangeTile(1, 0, Level.TileType.Destination, Level.ColourType.Blue);
+        lvl.ChangeTile(2, 0, Level.TileType.Destination, Level.ColourType.Blue);
+        //Landing pads
+        lvl.ChangeTile(1, 0, Level.TileType.Landing);
+        lvl.ChangeTile(2, 0, Level.TileType.Landing);
+        lvl.ChangeTile(3, 0, Level.TileType.Landing);
+        //Flower pads
+        //logs
+        //disappearing logs
+        //rocks
+        //fountains
+        //birds
+
+        return lvl;
+    }
+
+    public static Level GetLevel08()
+    {
+        Level lvl = Level.Create(rows: 3, cols: 1, levelID: 8, bronzeTarget: 9, silverTarget: 7, goldTarget: 5);//TODO placeholder, complete all levels properly
+
+        //Frogs
+        lvl.AddMovable(4, 0, Level.ColourType.Red);
+        lvl.AddMovable(0, 0, Level.ColourType.Blue);
+        //Desintations
+        lvl.ChangeTile(0, 0, Level.TileType.Destination, Level.ColourType.Red);
+        lvl.ChangeTile(4, 0, Level.TileType.Destination, Level.ColourType.Blue);
+        //Landing pads
+        lvl.ChangeTile(1, 0, Level.TileType.Landing);
+        lvl.ChangeTile(2, 0, Level.TileType.Landing);
+        //Flower pads
+        //logs
+        //disappearing logs
+        //rocks
+        //fountains
+        //birds
+
+        return lvl;
+    }
+
+    public static Level GetLevel09()
+    {
+        Level lvl = Level.Create(rows: 3, cols: 1, levelID: 9, bronzeTarget: 10, silverTarget: 8, goldTarget: 6);//TODO placeholder, complete all levels properly
+
+        //Frogs
+        lvl.AddMovable(3, 0, Level.ColourType.Red);
+        lvl.AddMovable(0, 0, Level.ColourType.Blue);
+        //Desintations
+        lvl.ChangeTile(0, 0, Level.TileType.Destination, Level.ColourType.Red);
+        lvl.ChangeTile(3, 0, Level.TileType.Destination, Level.ColourType.Blue);
+        //Landing pads
+        lvl.ChangeTile(2, 0, Level.TileType.Landing);
+        lvl.ChangeTile(1, 0, Level.TileType.Landing);
+        lvl.ChangeTile(1, 1, Level.TileType.Landing);
+        lvl.ChangeTile(1, 2, Level.TileType.Landing);
+        lvl.ChangeTile(1, 3, Level.TileType.Landing);
+        //Flower pads
+        //logs
+        //disappearing logs
+        //rocks
+        //fountains
+        //birds
+
+        return lvl;
+    }
+
+    public static Level GetLevel10()
+    {
+        Level lvl = Level.Create(rows: 3, cols: 1, levelID: 10, bronzeTarget: 14, silverTarget: 12, goldTarget: 10);//TODO placeholder, complete all levels properly
+
+        //Frogs
+        lvl.AddMovable(0, 2, Level.ColourType.Red);
+        lvl.AddMovable(2, 0, Level.ColourType.Blue);
+        lvl.AddMovable(4, 2, Level.ColourType.Yellow);
+        lvl.AddMovable(2, 4, Level.ColourType.Green);
+        //Desintations
+        lvl.ChangeTile(2, 0, Level.TileType.Destination, Level.ColourType.Red);
+        lvl.ChangeTile(2, 4, Level.TileType.Destination, Level.ColourType.Blue);
+        lvl.ChangeTile(0, 2, Level.TileType.Destination, Level.ColourType.Yellow);
+        lvl.ChangeTile(4, 2, Level.TileType.Destination, Level.ColourType.Green);
+        //Landing pads
+        lvl.ChangeTile(0, 0, Level.TileType.Landing);
+        lvl.ChangeTile(0, 1, Level.TileType.Landing);
+        lvl.ChangeTile(1, 0, Level.TileType.Landing);
+        lvl.ChangeTile(1, 2, Level.TileType.Landing);
+        lvl.ChangeTile(2, 1, Level.TileType.Landing);
+        lvl.ChangeTile(2, 2, Level.TileType.Landing);
+        //Flower pads
+        //logs
+        //disappearing logs
+        //rocks
+        //fountains
+        //birds
+
+        return lvl;
+    }
     #endregion
 
 
