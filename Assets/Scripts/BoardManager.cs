@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Diagnostics;
 
 public class BoardManager : MonoBehaviour {
 
@@ -38,22 +39,140 @@ public class BoardManager : MonoBehaviour {
     public int NumberOfRows { get; private set; }
     public int NumberOfColumns { get; private set; }
 
-    private Level lvl;
+    [HideInInspector]
+    public Level lvl;
 
     private TilePiece[,] board;
+
+    //public Action MoveCompleted;
+
+    private GameObject boardCanvas;
+
+    private EndOfGameMenu endUI;
+    private InGameUI gameUI;
+
+    private Camera cam;
+
+    private GameObject canvas;
+    public void Start()
+    {
+
+        //GameObject canvas = GameObject.Find("Canvas").gameObject;
+        //GameObject inGame = canvas.transform.FindChild("InGame").gameObject;
+        //boardCanvas = inGame.transform.FindChild("BoardPanel").gameObject;
+        ////boardCanvas = GameObject.Find("Canvas").transform.FindChild("InGame").transform.FindChild("BoardPanel").gameObject;
+        //endUI = GameObject.Find("Canvas").transform.FindChild("EndOfGame").GetComponent<EndOfGameMenu>();//get level complete panel object
+        //cam = GameObject.Find("Main Camera").GetComponent<Camera>();
+    }
+
+
+    public void Init()
+    {
+        canvas = GameObject.Find("Canvas").gameObject;
+        endUI = canvas.transform.FindChild("EndOfGame").GetComponent<EndOfGameMenu>();//get level complete panel object
+        cam = GameObject.Find("Main Camera").GetComponent<Camera>();
+        gameUI = canvas.transform.FindChild("InGame").GetComponent<InGameUI>();
+
+        endUI.Init();
+        gameUI.Init();
+    }
 
     //TODO make static / move to factory class
     public void SetupBoard(Level lv)
     {
+
+        
+        GameObject inGame = canvas.transform.FindChild("InGame").gameObject;
+        boardCanvas = inGame.transform.FindChild("BoardPanel").gameObject;
+        //boardCanvas = GameObject.Find("Canvas").transform.FindChild("InGame").transform.FindChild("BoardPanel").gameObject;
+
+
+
+        
+        endUI.Hide();
+        
+        gameUI.SetLevelNameText(lv.Name);
+        gameUI.SetMoveText(0);
+
+        //Clear board
+        foreach (Transform child in boardCanvas.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
         lvl = lv;
 
+        MoveCount = 0;
         NumberOfRows = lvl.RowCount;
         NumberOfColumns = lvl.ColumnCount;
         board = new TilePiece[NumberOfRows, NumberOfColumns];
 
-        //Rubbish
-        Inputs = ((GameObject)Instantiate(InputListener, new Vector3(0f, 0f, 0f), Quaternion.identity)).GetComponent<InputListener>();
         
+
+
+
+
+        //Camera Zooming and positioning - Nicolas Magic
+        float screenWidth = 1080;
+        float screenHeight = 1920 - (150 * 2);
+
+        float spriteSize = 280;
+
+        float boardWidth = spriteSize * NumberOfColumns;
+        float boardHeight = spriteSize * NumberOfRows;
+
+        float widthRatio = screenWidth / boardWidth;
+        float heightRatio = screenHeight / boardHeight;
+
+        cam.transform.position = new Vector3((NumberOfColumns - 1) * 0.5f, (NumberOfRows - 1) * -0.5f, -10f);
+
+        if (widthRatio >= heightRatio) //shows that we need to deal with height only to determine the layout and vv 
+        {
+            float RowsSeen = NumberOfRows + (500f / spriteSize);
+            cam.orthographicSize = RowsSeen / 2f;
+        }
+        else
+        {
+            float RowsSeen = NumberOfColumns / cam.aspect;
+            cam.orthographicSize = RowsSeen / 2f;
+        }
+
+
+
+
+
+        #region OldCameraZoom
+
+        //float width = NumberOfColumns;
+        //float height = NumberOfRows;
+
+        //cam.transform.position = new Vector3((width - 1) * 0.5f, (height - 1) * -0.5f, -10f);
+
+        //if (width >= height)//square or fat and short
+        //{
+        //    cam.orthographicSize = Math.Max(width, height) / (2 * cam.aspect);
+        //}
+        //else//tall - need to take account of UI at top at bottom (150px each, 300 total)
+        //{
+        //    cam.orthographicSize = Math.Max(width, height) * 0.5f * (1f + (300f / cam.pixelHeight));
+        //}
+        //cam.orthographicSize = Math.Max((width + 1) / 2, (height + 1) / 2) * 2;
+        //cam.orthographicSize = (Math.Max(width, height)) / (2 * (width >= height ? cam.aspect : 1));
+
+        #endregion
+
+
+        /*RULES
+         * RowsSeen = 2 * cam.orthographicSize
+         * ColsSeen = RowsSeen * cam.aspect
+         */
+
+
+
+
+
+
+        Inputs = ((GameObject)Instantiate(InputListener, new Vector3(0f, 0f, 0f), Quaternion.identity,boardCanvas.transform)).GetComponent<InputListener>();
         
 
         for (int r = 0; r < NumberOfRows; r++)
@@ -119,7 +238,8 @@ public class BoardManager : MonoBehaviour {
                 }
                 
                 //AddTile(go, r, c);
-                TilePiece tp = ((GameObject)Instantiate(go, new Vector3(c, -r, 0f), Quaternion.Euler(0,0, rotation))).GetComponent<TilePiece>();
+                TilePiece tp = ((GameObject)Instantiate(go, new Vector3(c, -r, 0f), Quaternion.Euler(0,0, rotation),boardCanvas.transform)).GetComponent<TilePiece>();
+                //tp.transform.parent = boardCanvas.transform;
 
                 if(ce.Tile.Type == Level.TileType.Redirect)
                 {
@@ -151,7 +271,9 @@ public class BoardManager : MonoBehaviour {
                     }
 
                     //AddTile(mgo, r, c);
-                    MovablePiece mp = ((GameObject)Instantiate(mgo, new Vector3(c, -r, 0f), Quaternion.identity)).GetComponent<MovablePiece>();
+
+                    MovablePiece mp = ((GameObject)Instantiate(mgo, new Vector3(c, -r, 0f), Quaternion.identity,boardCanvas.transform)).GetComponent<MovablePiece>();
+                    //mp.transform.parent = boardCanvas.transform;
                     mp.Move(tp);
                     mp.Clicked +=(s,e) => ChangeSelectedPiece(s as MovablePiece);
                 }
@@ -194,25 +316,54 @@ public class BoardManager : MonoBehaviour {
         
     }
 
-    public event EventHandler GameWon;
-    public event EventHandler GameLost;
+    //public event EventHandler GameWon;
+    //public event EventHandler GameLost;
+
+    public event Action<BoardManager,GameResult> GameFinished;
+    
+    public enum GameResult { Gold, Silver, Bronze, Loss }
+
+    [HideInInspector]
+    public Stopwatch Timer = new Stopwatch();//TODO start and stop
 
     [HideInInspector]
     public int MoveCount = 0;
 
     private MovablePiece selectedPiece;
 
+    private void OnFinished(GameResult result)
+    {
+        endUI.Show(MoveCount, result);//TODO move not right shouldn't be handling ui inside the board object
+        if (GameFinished != null)
+        {
+            GameFinished.Invoke(this, result);
+        }
+    }
+
     private void EndTurn()
     {
         MoveCount++;
+
+        //TODO move elsewhere, need event system?
+        gameUI.SetMoveText(MoveCount);
 
         List<TilePiece> boardList = board.Cast<TilePiece>().ToList();
 
         //check if the game has won, if all destinations have been completed
         if(!boardList.Any(t => t.IsDestination && !t.IsCompleted))
         {
-            if (GameWon != null)
-                GameWon.Invoke(this, null);
+            //if (GameFinished != null)
+            //{
+                if (MoveCount > lvl.BronzeTarget)
+                    OnFinished(GameResult.Loss);// GameFinished.Invoke(this, GameResult.Loss);
+                else if (MoveCount > lvl.SilverTarget)
+                    OnFinished(GameResult.Bronze);// GameFinished.Invoke(this, GameResult.Bronze);
+                else if (MoveCount > lvl.GoldTarget)
+                    OnFinished(GameResult.Silver);// GameFinished.Invoke(this, GameResult.Silver);
+                else
+                    OnFinished(GameResult.Gold);// GameFinished.Invoke(this, GameResult.Gold);
+            //}
+            
             return;
         }
 
@@ -221,14 +372,14 @@ public class BoardManager : MonoBehaviour {
         foreach (Color c in cols)
         {
             
-            int movePieceCount = boardList.Count(p => p.HasMovingPiece && p.MovingPiece.PieceColour == c);
+            int movePieceCount = boardList.Count(p => p.HasMovingPiece && p.MovingPiece.PieceColour == c && !p.MovingPiece.IsKillPending);
             int destinationCount = boardList.Count(p => p.IsDestination && p.PieceColour == c);
 
             //check if game lost, if there are less moving pieces than destinations
             if (movePieceCount < destinationCount)
             {
-                if (GameLost != null)
-                    GameLost.Invoke(this, null);
+                //if (GameFinished != null)
+                    OnFinished(GameResult.Loss);// GameFinished.Invoke(this, GameResult.Loss);//TODO is this right?
                 return;
             }
         }
@@ -305,9 +456,8 @@ public class BoardManager : MonoBehaviour {
                     board[jumpedOver.Row, jumpedOver.Column] = newT;
                     jumpedOver.gameObject.SetActive(false);
                 }
-
-                //is final landed piece destroyed?
-                if (landedOn.IsDestroyedOnMoveOn)
+                
+                else if (landedOn.IsDestroyedOnMoveOn)//is final landed piece destroyed?
                 {
                     if (landedOn.MovingPiece != null)
                         landedOn.MovingPiece.Kill();
@@ -324,96 +474,7 @@ public class BoardManager : MonoBehaviour {
 
         return hasMovedOnce;
     }
-
-
-    //public bool AttemptToMoveSelected(int rowOffset, int colOffset)
-    //{
-    //    if (selectedPiece == null)
-    //        return false;
-
-
-    //    int dRow = selectedPiece.Row + rowOffset;
-    //    int dCol = selectedPiece.Column + colOffset;
-
-    //    TilePiece destP = GetTile(dRow, dCol);
-    //    if (destP == null)
-    //        return false;//exit if heading out of board
-
-
-    //    TilePiece jumpedOver = null;
-
-    //    //perform jump
-    //    if(!destP.IsLandable && !destP.IsRedirector && destP.CanBeJumpedOver)//if can't land on then recalculate for jumping
-    //    {
-    //        jumpedOver = destP;
-    //        dRow = selectedPiece.Row + (rowOffset * 2);
-    //        dCol = selectedPiece.Column + (colOffset * 2);
-    //        destP = GetTile(dRow, dCol);
-
-    //        if (destP == null)
-    //            return false;//jump would be out of board
-    //    }
-
-    //    if (destP.IsRedirector)
-    //    {
-    //        TilePiece destP2 = destP;//intermediatary step
-    //        destP = GetTile(dRow + destP.RedirectRowOffset, dCol + destP.RedirectColumnOffset);
-
-    //        selectedPiece.Move(destP2,destP);//step on fountain
-    //        //selectedPiece.Move(destP);//move to where fountain is pointing
-
-    //    }
-    //    else if (destP.IsLandable)
-    //    {
-    //        selectedPiece.Move(destP);
-    //    }
-    //    else
-    //    {
-    //        return false;//no moves completed
-    //    }
-
-
-    //    //is final landed piece destroyed?
-    //    if (destP.IsDestroyedOnMoveOn || (jumpedOver != null && jumpedOver.IsDestroyedOnJumpOver))
-    //    {
-    //        TilePiece newT = ((GameObject)Instantiate(EmptyPiece, new Vector3(destP.Column, -destP.Row, 0f), Quaternion.identity)).GetComponent<TilePiece>();
-    //        board[destP.Row, destP.Column] = newT;
-    //        destP.gameObject.SetActive(false);
-    //    }
-
-    //    //is selected moving destoyed?
-    //    if (destP.KillsPieceOnLand || (jumpedOver != null && jumpedOver.KillsPieceOnJumpOver))
-    //    {
-    //        selectedPiece.Kill();
-    //        selectedPiece = null;
-    //    }
-
-    //    //is jumped over piece destroyed?
-    //    if (jumpedOver != null && jumpedOver.IsDestroyedOnJumpOver)
-    //    {//TODO move tile destruction inside tile? - reset all pub vars to empty, sprite to none, kill all pieces inside
-    //        if(jumpedOver.MovingPiece != null)
-    //            jumpedOver.MovingPiece.Kill();
-
-    //        TilePiece newT = ((GameObject)Instantiate(EmptyPiece, new Vector3(jumpedOver.Column, -jumpedOver.Row, 0f), Quaternion.identity)).GetComponent<TilePiece>();
-    //        board[jumpedOver.Row, jumpedOver.Column] = newT;
-    //        jumpedOver.gameObject.SetActive(false);
-    //    }
-
-    //    return true;
-    //}
-
-
-
-    //private void MoveSelectedToTile(TilePiece tp)
-    //{
-
-
-    //    TilePiece curTile = GetTile(selectedPiece.Row, selectedPiece.Column);
-    //    selectedPiece.Move(tp);
-    //    tp.MovingPiece = selectedPiece;
-    //    curTile.MovingPiece = null;
-    //}
-
+    
 
 
 

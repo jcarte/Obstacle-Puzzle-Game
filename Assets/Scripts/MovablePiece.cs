@@ -4,34 +4,63 @@ using System;
 using System.Linq;
 using System.Collections;
 
-public class MovablePiece : BasePiece
+/// <summary>
+/// Pieces on the board that the user controls and moves around, one selected at a time
+/// </summary>
+public class MovablePiece : MonoBehaviour
 {
-
-    public int Row;
-    public int Column;
+    /// <summary>
+    /// The tile has finished moving
+    /// </summary>
+    public event EventHandler MovementCompleted;
     
-    private Rigidbody2D rb2D;
+    /// <summary>
+    /// The tile was clicked by the user
+    /// </summary>
+    public event EventHandler Clicked;
 
-    public float moveTime = 0.1f;			//Time it will take object to move, in seconds.
-    private float inverseMoveTime;          //Used to make movement more efficient.
+    /// <summary>
+    /// Colour of piece, aiming to land on destination of same colour
+    /// </summary>
+    public Color PieceColour;
 
-    //[HideInInspector]
-    //public bool IsSelected = false;
+    /// <summary>
+    /// Row on the game board (zero based)
+    /// </summary>
+    [HideInInspector]
+    public int Row;
 
+    /// <summary>
+    /// Column on the game board (zero based)
+    /// </summary>
+    [HideInInspector]
+    public int Column;
+
+    /// <summary>
+    /// The board tile piece that this object is sitting inside (on)
+    /// </summary>
     [HideInInspector]
     public TilePiece PieceInside = null;
 
-    public event EventHandler MovementCompleted;
-    public event EventHandler Clicked;
-
-    private Queue<Vector2> moveq = new Queue<Vector2>(25);
-
+    /// <summary>
+    /// Is this piece currently moving
+    /// </summary>
     public bool IsMoving { get; private set; }
 
+    /// <summary>
+    /// Is the piece instructed to kill itself?
+    /// </summary>
     public bool IsKillPending = false;
 
-    // Use this for initialization
-    void Start()
+    public float moveTime = 0.1f;//Time it will take object to move, in seconds.
+    private float inverseMoveTime;//Used to make movement more efficient.
+
+    private Rigidbody2D rb2D;
+    private SpriteRenderer sRender;
+
+    private Queue<Vector2> moveq = new Queue<Vector2>(25);//Ordered queue of moves (destinations) to move the piece
+
+    void Awake()
     {
         IsMoving = false;
         
@@ -39,41 +68,30 @@ public class MovablePiece : BasePiece
         inverseMoveTime = 1f / moveTime;
 
         rb2D = GetComponent<Rigidbody2D>();
+        sRender = GetComponent<SpriteRenderer>();
 
-
-        Column = (int)transform.position.x;
+        Column = (int)transform.position.x;//starting position
         Row = -(int)transform.position.y;
+    }
 
+    //TODO add animation
 
-    //GameManager.Instance.AddMovablePiece(this);
-}
-
-    // Update is called once per frame
-    //void Update()
-    //{
-
-    //}
-
-
-
+    /// <summary>
+    /// Move this piece through all given tiles in order
+    /// </summary>
+    /// <param name="ts">All tiles to move ontop of</param>
     public void Move(params TilePiece[] ts)
     {
         if (PieceInside != null)
             PieceInside.MovingPiece = null;
-
+        
+        //Move to each tile
         foreach (TilePiece t in ts)
         {
-            //Store start position to move from, based on objects current transform position.
-            //Vector2 start = transform.position;
-
-            // Calculate end position based on the direction parameters passed in when calling Move.
-            //Vector2 end = start + new Vector2((t.Column - Column), -(t.Row - Row));
-
-            Vector2 end = t.transform.position;
-
-            moveq.Enqueue(end);
+            moveq.Enqueue(t.transform.position);//add position of every tile to moveto queue
         }
 
+        //Finish the piece in the final queued tile
         TilePiece last = ts.Last();
         last.MovingPiece = this;
         PieceInside = last;
@@ -81,44 +99,17 @@ public class MovablePiece : BasePiece
         Row = last.Row;
         Column = last.Column;
 
+        //if not already moving, start
         if(!IsMoving)
             StartCoroutine(SmoothMovement());
     }
 
-    //public void Jump(TilePiece t)
-    //{
-    //    Jump(t.Row - Row, t.Column - Column);
-    //}
-
-    //TODO Merge move and jump? Need a redirect?
-    //private void Move(int rows, int cols)
-    //{
-
-    //    //TODO add animation
-
-        
-
-        
-
-    //    //Debug.Log("StartMove (" + start.y + "," + start.x + ") End (" + end.y + "," + end.x + ")");
-
-    //    //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
-    //    StartCoroutine(SmoothMovement(end));
-
-
-
-    //}
-
-
- 
-
-
-
+    
     //Co-routine for moving units from one space to next, takes a parameter end to specify where to move to.
     //protected IEnumerator SmoothMovement(Vector3 end)
     protected IEnumerator SmoothMovement()
     {
-
+        sRender.sortingOrder = 1;//when moving put the sprite above all others
         IsMoving = true;
 
         while (moveq.Count > 0)
@@ -141,16 +132,15 @@ public class MovablePiece : BasePiece
                 //Recalculate the remaining distance after moving.
                 sqrRemainingDistance = (transform.position - end).sqrMagnitude;
 
-
                 //Return and loop until sqrRemainingDistance is close enough to zero to end the function
                 yield return null;
             }
         }
-        
+
+        sRender.sortingOrder = 0;//when moving complete return sprite to normal layer order
 
         if (MovementCompleted != null)
             MovementCompleted.Invoke(this, null);
-        
 
         IsMoving = false;
 
@@ -160,6 +150,9 @@ public class MovablePiece : BasePiece
         }
     }
 
+    /// <summary>
+    /// Set the piece to be killed
+    /// </summary>
     public void Kill()
     {
         if(IsMoving)
@@ -174,22 +167,15 @@ public class MovablePiece : BasePiece
             PieceInside.MovingPiece = null;
             PieceInside = null;
             gameObject.SetActive(false);
-
-            //if (MovementCompleted != null)
-            //    MovementCompleted.Invoke(this, null);
         }
-        
     }
     
-
+    //User clicked on this object
     private void OnMouseDown()
     {
         if (Clicked != null)
             Clicked.Invoke(this, null);
         //Debug.Log("sprite clicked");
     }
-
-
-
 
 }

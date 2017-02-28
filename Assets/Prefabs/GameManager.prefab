@@ -52,7 +52,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0278b2fe6eecbfc4482bcf8597b8570d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boardScript: {fileID: 0}
 --- !u!114 &114000013898473796
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -96,4 +95,12 @@ MonoBehaviour:
     type: 2}
   InputListener: {fileID: 1000013496015748, guid: a8cea0313c8b9174cbc4f7c997fd9744,
     type: 2}
+  lvl:
+    LevelID: 0
+    Name: 
+    RowCount: 0
+    ColumnCount: 0
+    BronzeTarget: 0
+    SilverTarget: 0
+    GoldTarget: 0
   MoveCount: 0

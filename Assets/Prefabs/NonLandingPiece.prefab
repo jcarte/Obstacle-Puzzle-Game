@@ -52,14 +52,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 840c7ec2b85437e448a6b9dcd262ca6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PieceColour: {r: 0, g: 0, b: 0, a: 0}
   CanBeLandedOn: 0
   CanBeJumpedOver: 1
+  IsDestroyedOnJumpOver: 0
+  IsDestroyedOnMoveOn: 0
   KillsPieceOnLand: 0
   KillsPieceOnJumpOver: 0
   IsRedirector: 0
-  RedirectDirection: {x: 0, y: 0}
+  RedirectColumnOffset: 0
+  RedirectRowOffset: 0
   IsDestination: 0
-  DestinationType: 0
+  MovingPiece: {fileID: 0}
 --- !u!212 &212000012300633616
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -89,7 +93,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1670149869
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b3a0973f582594e41a240d03f4c2c35f, type: 3}
+  m_Sprite: {fileID: 21300024, guid: 9c6897038ee1d5546899cfcecd38e026, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
