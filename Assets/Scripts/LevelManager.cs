@@ -268,6 +268,84 @@ public class LevelManager
 
         return lvl;
     }
+
+    public static Level GetLevel11()
+    {
+        Level lvl = Level.Create(rows: 7, cols: 7, levelID: 11, name: "Bonus", bronzeTarget: 100, silverTarget: 100, goldTarget: 100);//TODO placeholder, complete all levels properly
+
+        //Frogs
+        lvl.AddMovable(2, 2, Level.ColourType.Green);
+        lvl.AddMovable(2, 4, Level.ColourType.Blue);
+        lvl.AddMovable(4, 2, Level.ColourType.Red);
+        lvl.AddMovable(4, 4, Level.ColourType.Yellow);
+
+
+        //0
+        lvl.ChangeTile(0, 0, Level.TileType.Redirect, 1, 0);
+        lvl.ChangeTile(0, 1, Level.TileType.Redirect, 0, -1);
+        lvl.ChangeTile(0, 2, Level.TileType.Landing);
+        lvl.ChangeTile(0, 3, Level.TileType.Landing);
+        lvl.ChangeTile(0, 4, Level.TileType.Landing);
+        lvl.ChangeTile(0, 5, Level.TileType.NonLanding);
+        lvl.ChangeTile(0, 6, Level.TileType.Obstacle);
+
+        //1
+        lvl.ChangeTile(1, 0, Level.TileType.Redirect, 1, 0);
+        lvl.ChangeTile(1, 1, Level.TileType.Destination, Level.ColourType.Blue);
+        lvl.ChangeTile(1, 2, Level.TileType.FakeDisappearing);
+        lvl.ChangeTile(1, 3, Level.TileType.Disappearing);
+        lvl.ChangeTile(1, 4, Level.TileType.FakeDisappearing);
+        lvl.ChangeTile(1, 5, Level.TileType.Enemy);
+        lvl.ChangeTile(1, 6, Level.TileType.Obstacle);
+
+        //2
+        lvl.ChangeTile(2, 0, Level.TileType.Redirect, 0, 1);
+        lvl.ChangeTile(2, 1, Level.TileType.Redirect, 0, 1);
+        lvl.ChangeTile(2, 2, Level.TileType.Landing);
+        lvl.ChangeTile(2, 3, Level.TileType.Redirect, 0, 1);
+        lvl.ChangeTile(2, 4, Level.TileType.Landing);
+        lvl.ChangeTile(2, 5, Level.TileType.Landing);
+        lvl.ChangeTile(2, 6, Level.TileType.NonLanding);
+
+        //3
+        lvl.ChangeTile(3, 0, Level.TileType.Redirect, 1, 0);
+        lvl.ChangeTile(3, 1, Level.TileType.Redirect, 0, -1);
+        lvl.ChangeTile(3, 2, Level.TileType.Redirect, 0, -1);
+        lvl.ChangeTile(3, 3, Level.TileType.NonLanding);
+        lvl.ChangeTile(3, 4, Level.TileType.Redirect, -1, 0);
+        lvl.ChangeTile(3, 5, Level.TileType.Enemy);
+        lvl.ChangeTile(3, 6, Level.TileType.Landing);
+
+        //4
+        lvl.ChangeTile(4, 0, Level.TileType.Landing);
+        lvl.ChangeTile(4, 1, Level.TileType.Enemy);
+        lvl.ChangeTile(4, 2, Level.TileType.Landing);
+        lvl.ChangeTile(4, 3, Level.TileType.Redirect, 0, -1);
+        lvl.ChangeTile(4, 4, Level.TileType.Landing);
+        lvl.ChangeTile(4, 5, Level.TileType.Disappearing);
+        lvl.ChangeTile(4, 6, Level.TileType.Obstacle);
+
+        //5
+        //lvl.ChangeTile(5, 0, Level.TileType.
+        lvl.ChangeTile(5, 1, Level.TileType.Destination, Level.ColourType.Yellow);
+        lvl.ChangeTile(5, 2, Level.TileType.Disappearing);
+        lvl.ChangeTile(5, 3, Level.TileType.NonLanding);
+        lvl.ChangeTile(5, 4, Level.TileType.Obstacle);
+        lvl.ChangeTile(5, 5, Level.TileType.Destination, Level.ColourType.Green);
+        lvl.ChangeTile(5, 6, Level.TileType.Landing);
+
+        //6
+        lvl.ChangeTile(6, 0, Level.TileType.FakeDisappearing);
+        lvl.ChangeTile(6, 1, Level.TileType.Landing);
+        lvl.ChangeTile(6, 2, Level.TileType.Landing);
+        lvl.ChangeTile(6, 3, Level.TileType.FakeDisappearing);
+        lvl.ChangeTile(6, 4, Level.TileType.FakeDisappearing);
+        lvl.ChangeTile(6, 5, Level.TileType.Disappearing);
+        lvl.ChangeTile(6, 6, Level.TileType.FakeDisappearing);
+
+        return lvl;
+    }
+
     #endregion
 
 

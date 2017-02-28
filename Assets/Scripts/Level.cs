@@ -66,7 +66,6 @@ public class Level
         return Create(rows, cols, levelID, 0, 0, 0);
     }
 
-
     /// <summary>
     /// Creates a new level
     /// </summary>
@@ -79,9 +78,25 @@ public class Level
     /// <returns></returns>
     public static Level Create(int rows, int cols, int levelID, int bronzeTarget, int silverTarget, int goldTarget)
     {
+        return Create(rows, cols, levelID, "Level " + levelID, 0, 0, 0);
+    }
+
+    /// <summary>
+    /// Creates a new level
+    /// </summary>
+    /// <param name="rows">Number of cells high for the whole board</param>
+    /// <param name="cols">Number of cells across for the whole board</param>
+    /// <param name="levelID">Unique id for the level</param>
+    /// <param name="name">Name for Level</param>
+    /// <param name="bronzeTarget">Number of moves to receive a bronze medal</param>
+    /// <param name="silverTarget">Number of moves to receive a silver medal</param>
+    /// <param name="goldTarget">Number of moves to receive a gold medal</param>
+    /// <returns></returns>
+    public static Level Create(int rows, int cols, int levelID, string name, int bronzeTarget, int silverTarget, int goldTarget)
+    {
         Level lvl = new Level();
         lvl.LevelID = levelID;
-        lvl.Name = "Level " + levelID;// string.Format("00", levelID);
+        lvl.Name = name;
         lvl.BronzeTarget = bronzeTarget;
         lvl.SilverTarget = silverTarget;
         lvl.GoldTarget = goldTarget;
