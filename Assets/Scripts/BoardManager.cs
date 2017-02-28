@@ -52,6 +52,8 @@ public class BoardManager : MonoBehaviour {
     private InGameUI gameUI;
 
     private Camera cam;
+
+    private GameObject canvas;
     public void Start()
     {
 
@@ -64,22 +66,31 @@ public class BoardManager : MonoBehaviour {
     }
 
 
-    //TODO make static / move to factory class
-    public void SetupBoard(Level lv)
+    public void Init()
     {
-
-        GameObject canvas = GameObject.Find("Canvas").gameObject;
-        GameObject inGame = canvas.transform.FindChild("InGame").gameObject;
-        boardCanvas = inGame.transform.FindChild("BoardPanel").gameObject;
-        //boardCanvas = GameObject.Find("Canvas").transform.FindChild("InGame").transform.FindChild("BoardPanel").gameObject;
+        canvas = GameObject.Find("Canvas").gameObject;
         endUI = canvas.transform.FindChild("EndOfGame").GetComponent<EndOfGameMenu>();//get level complete panel object
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
         gameUI = canvas.transform.FindChild("InGame").GetComponent<InGameUI>();
 
-
         endUI.Init();
-        endUI.Hide();
         gameUI.Init();
+    }
+
+    //TODO make static / move to factory class
+    public void SetupBoard(Level lv)
+    {
+
+        
+        GameObject inGame = canvas.transform.FindChild("InGame").gameObject;
+        boardCanvas = inGame.transform.FindChild("BoardPanel").gameObject;
+        //boardCanvas = GameObject.Find("Canvas").transform.FindChild("InGame").transform.FindChild("BoardPanel").gameObject;
+
+
+
+        
+        endUI.Hide();
+        
         gameUI.SetLevelNameText(lv.Name);
         gameUI.SetMoveText(0);
 

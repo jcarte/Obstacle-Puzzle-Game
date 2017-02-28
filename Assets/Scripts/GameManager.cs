@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour {
     {
         if (pendingLevel != null)
         {
+            boardScript.Init();
             StartLevel(pendingLevel);
             pendingLevel = null;
         }
@@ -42,6 +43,7 @@ public class GameManager : MonoBehaviour {
 
         Instance = this;
         boardScript = GetComponent<BoardManager>();
+        
         DontDestroyOnLoad(gameObject);
 
         levels = LevelManager.GetAllLevels();

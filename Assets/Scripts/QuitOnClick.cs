@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class QuitOnClick : MonoBehaviour {
+public class QuitOnClick : MonoBehaviour {//TODO rename / merge into other script as now not useful
 
     public void Quit()
     {

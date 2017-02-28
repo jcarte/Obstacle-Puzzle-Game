@@ -13,6 +13,8 @@ public class EndOfGameMenu : MonoBehaviour {
 
     GameObject lastPage;
 
+    Button lastPageMainMenuButton;
+
     // Use this for initialization
     public void Init () 
     {
@@ -28,9 +30,12 @@ public class EndOfGameMenu : MonoBehaviour {
 
         lastPage = transform.FindChild("LastPage").gameObject;
 
+        lastPageMainMenuButton = lastPage.transform.FindChild("MainMenuButton").GetComponent<Button>();
+
         nextLevelButton.onClick.AddListener(delegate () { GameManager.Instance.StartNextLevel(); });
         mainMenuButton.onClick.AddListener(delegate () { GameManager.Instance.LoadMainMenu(); });
         tryAgainButton.onClick.AddListener(delegate () { GameManager.Instance.RetryLevel(); });
+        lastPageMainMenuButton.onClick.AddListener(delegate () { GameManager.Instance.LoadMainMenu(); });
     }
 	
 
