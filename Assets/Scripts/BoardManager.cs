@@ -354,14 +354,14 @@ public class BoardManager : MonoBehaviour {
         {
             //if (GameFinished != null)
             //{
-                if (MoveCount > lvl.BronzeTarget)
-                    OnFinished(GameResult.Loss);// GameFinished.Invoke(this, GameResult.Loss);
-                else if (MoveCount > lvl.SilverTarget)
-                    OnFinished(GameResult.Bronze);// GameFinished.Invoke(this, GameResult.Bronze);
-                else if (MoveCount > lvl.GoldTarget)
-                    OnFinished(GameResult.Silver);// GameFinished.Invoke(this, GameResult.Silver);
-                else
-                    OnFinished(GameResult.Gold);// GameFinished.Invoke(this, GameResult.Gold);
+            if (MoveCount > lvl.BronzeTarget)
+                OnFinished(GameResult.Loss);// GameFinished.Invoke(this, GameResult.Loss);
+            else if (MoveCount > lvl.SilverTarget)
+                OnFinished(GameResult.Bronze);// GameFinished.Invoke(this, GameResult.Bronze);
+            else if (MoveCount > lvl.GoldTarget)
+                OnFinished(GameResult.Silver);// GameFinished.Invoke(this, GameResult.Silver);
+            else
+                OnFinished(GameResult.Gold);// GameFinished.Invoke(this, GameResult.Gold);
             //}
             
             return;
