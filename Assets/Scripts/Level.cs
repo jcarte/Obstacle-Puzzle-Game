@@ -78,7 +78,7 @@ public class Level
     /// <returns></returns>
     public static Level Create(int rows, int cols, int levelID, int bronzeTarget, int silverTarget, int goldTarget)
     {
-        return Create(rows, cols, levelID, "Level " + levelID, 0, 0, 0);
+        return Create(rows, cols, levelID, "Level " + levelID, bronzeTarget, silverTarget, goldTarget);
     }
 
     /// <summary>
