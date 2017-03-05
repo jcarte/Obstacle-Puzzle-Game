@@ -46,6 +46,8 @@ public class GameManager : MonoBehaviour {
         
         DontDestroyOnLoad(gameObject);
 
+        DontDestroyOnLoad(GameObject.Find("BG Music").gameObject);
+
         levels = LevelManager.GetAllLevels();
 
         SceneManager.sceneLoaded += (s, e) => LoadPendingLevel();
