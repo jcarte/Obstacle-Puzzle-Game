@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
+
 
 public class EndOfGameMenu : MonoBehaviour {
 
@@ -44,18 +44,18 @@ public class EndOfGameMenu : MonoBehaviour {
         gameObject.SetActive(false);
     }
 
-    public void Show(int moveCount, BoardManager.GameResult result)
+    public void Show(int moveCount, Board.GameResult result)
     {
         movesTxt.text = "Finished in " + moveCount + " moves!";
 
-        if (result == BoardManager.GameResult.Loss)
+        if (result == Board.GameResult.Loss)
             resultTxt.text = "You Failed";
         else
             resultTxt.text = "You earned " + result.ToString();
 
         gameObject.SetActive(true);
 
-        if(result != BoardManager.GameResult.Loss)
+        if(result != Board.GameResult.Loss)
         {
             if(GameManager.Instance.HasNextLevel())
             {

@@ -9,7 +9,7 @@ using System.Reflection;
 public class GameManager : MonoBehaviour {
 
 
-    private BoardManager boardScript;//TODO split BoardManager to Board
+    public BoardRenderer BoardRenderer;//TODO split BoardManager to Board
 
     public static GameManager Instance = null;
 
@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour {
     {
         if (pendingLevel != null)
         {
-            boardScript.Init();
+            BoardRenderer.Init();
             StartLevel(pendingLevel);
             pendingLevel = null;
         }
@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour {
         }
 
         Instance = this;
-        boardScript = GetComponent<BoardManager>();
+        BoardRenderer = GetComponent<BoardRenderer>();
         
         DontDestroyOnLoad(gameObject);
 
@@ -61,15 +61,15 @@ public class GameManager : MonoBehaviour {
 
     public void RetryLevel()
     {
-        StartLevel(boardScript.lvl);
+        StartLevel(BoardRenderer.CurrentBoard.lvl);
     }
 
 
     public bool HasNextLevel()
     {
-        if (boardScript != null && boardScript.lvl != null && boardScript.lvl.LevelID != 0)
+        if (BoardRenderer != null && BoardRenderer.CurrentBoard.lvl != null && BoardRenderer.CurrentBoard.lvl.LevelID != 0)//TODO change structure, call is too long
         {
-            return levels.Any(l => l.LevelID == boardScript.lvl.LevelID + 1);
+            return levels.Any(l => l.LevelID == BoardRenderer.CurrentBoard.lvl.LevelID + 1);
         }
         else
             return false;
@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour {
 
     public void StartNextLevel()
     {
-        StartLevel(boardScript.lvl.LevelID + 1);
+        StartLevel(BoardRenderer.CurrentBoard.lvl.LevelID + 1);
     }
 
     public void StartLevel(int levelID)
@@ -95,125 +95,22 @@ public class GameManager : MonoBehaviour {
             throw new ArgumentException("Level can't be null");
         if (SceneManager.GetActiveScene().name != "GameBoard")
         {
-            //SceneManager.sceneLoaded += (s, e) => StartLevel(lvl);
             pendingLevel = lvl;
             SceneManager.LoadScene("GameBoard");
 
         }
         else
         {
-            //SceneManager.sceneLoaded -= (s, e) => StartLevel(lvl);
-            boardScript.SetupBoard(lvl);
+            BoardRenderer.SetupBoard(lvl);
         }
         
     }
 
 
-    //TODO save progress / retrieve progress here
-
-
-
-    // Use this for initialization
-    //void Start () {
-    //    //SceneManager.sceneLoaded += NewSceneLoaded;
-
-    //}
-
-    //private void NewSceneLoaded(Scene arg0, LoadSceneMode arg1)
-    //{
-    //    //TODO complete
-    //    InitGame();
-    //}
-
-
-
-
-
-    //private void InitGame()
-    //{
-    //    Debug.ClearDeveloperConsole();
-
-
-
-
-
-
-
-
-
-
-
-    //    boardScript = GetComponent<BoardManager>();
-    //    boardScript.SetupBoard(lvl);
-
-    //    boardScript.GameFinished += BoardFinished;
-    //    //boardScript.GameWon += (s, e) => Debug.Log(string.Format("Game Won in {0} moves", ((BoardManager)s).MoveCount));
-    //    //boardScript.GameLost += (s, e) => Debug.Log(string.Format("Game Lost in {0} moves", ((BoardManager)s).MoveCount));
-
-
-
-
-    //}
-
-
-
-    //private void BoardFinished(BoardManager board, BoardManager.GameResult result)
-    //{
-
-
-    //    endUI.Show(board.MoveCount, result);
-
-
-    //}
-
-
-
-    // Update is called once per frame
-    //   void Update () {
-
-    //}
 
 }
 
 
-
-/* TODO
- * ==========
- * -Load level correctly from file
- * -Add game over UI screen and stats
- * -Add main menu UI
- * -Add new images
- * -Add sounds
- * -Comment/Clean
- * -Create level files x 10
- * -Save User Progress
- *
- * -Add medal win conditions in level object, evaluate at game manager not board
- * -Multiple fountains leading to a disappearing log, log goes way before the frog is killed
- */
-
-//New Structure....
-/*
-    
-    Game Manager - will handle everything outside of the current board configuration
-        - Choosing level, get level config object, setup new board, listen to game finished events
-        - Gather and save game results
-        - Bring up UI menus
-        - Starts new level
-
-
-
- * 
- */
-
-
-
-/*
- * Completed Screen
- * -Fire finished event on lose
- * -Level/board has medals 
- * 
- */
 
 
 
