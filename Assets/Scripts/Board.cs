@@ -10,8 +10,7 @@ using System.Collections.Generic;
 /// </summary>
 public class Board : MonoBehaviour
 {
-
-
+    
     public int NumberOfRows { get; private set; }
     public int NumberOfColumns { get; private set; }
 
@@ -22,7 +21,7 @@ public class Board : MonoBehaviour
 
     public event Action<GameResult> GameFinished;
 
-    public event Action TurnEnded;//TODO hook up
+    //public event Action TurnEnded;//TODO hook up
 
     public enum GameResult { Gold, Silver, Bronze, Loss }
 
@@ -56,13 +55,13 @@ public class Board : MonoBehaviour
 
     }
 
-    public void ChangeSelectedPiece(MovablePiece m)//TODO stop inputs?
+    public void ChangeSelectedPiece(MovablePiece m)//TODO stop inputs? what to do??
     {
-        if (selectedPiece != null)
-            selectedPiece.MovementCompleted -= (s, e) => Inputs.StartListening();
+        //if (selectedPiece != null)
+        //    selectedPiece.MovementCompleted -= (s, e) => Inputs.StartListening();
 
         selectedPiece = m;
-        selectedPiece.MovementCompleted += (s, e) => Inputs.StartListening();
+        //selectedPiece.MovementCompleted += (s, e) => Inputs.StartListening();
 
     }
 
@@ -183,7 +182,8 @@ public class Board : MonoBehaviour
                         jumpedOver.MovingPiece.Kill();
                     }
 
-                    TilePiece newT = ((GameObject)Instantiate(EmptyPiece, new Vector3(jumpedOver.Column, -jumpedOver.Row, 0f), Quaternion.identity)).GetComponent<TilePiece>();
+                    //TODO board renderer have method for this???
+                    TilePiece newT = ((GameObject)Instantiate(GameManager.Instance.BoardRenderer.EmptyPiece, new Vector3(jumpedOver.Column, -jumpedOver.Row, 0f), Quaternion.identity)).GetComponent<TilePiece>();
                     board[jumpedOver.Row, jumpedOver.Column] = newT;
                     jumpedOver.gameObject.SetActive(false);
                 }
@@ -193,7 +193,7 @@ public class Board : MonoBehaviour
                     if (landedOn.MovingPiece != null)
                         landedOn.MovingPiece.Kill();
 
-                    TilePiece newT = ((GameObject)Instantiate(EmptyPiece, new Vector3(landedOn.Column, -landedOn.Row, 0f), Quaternion.identity)).GetComponent<TilePiece>();
+                    TilePiece newT = ((GameObject)Instantiate(GameManager.Instance.BoardRenderer.EmptyPiece, new Vector3(landedOn.Column, -landedOn.Row, 0f), Quaternion.identity)).GetComponent<TilePiece>();
                     board[landedOn.Row, landedOn.Column] = newT;
                     landedOn.gameObject.SetActive(false);
                 }

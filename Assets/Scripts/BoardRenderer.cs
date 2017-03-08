@@ -38,18 +38,12 @@ public class BoardRenderer : MonoBehaviour {
     public GameObject DisappearingPiece;
     public GameObject FakeDisappearingPiece;
 
-    public GameObject InputListener;
+    //public GameObject InputListener;//TODO move to update statement in this class
 
+    public InputListener Inputs;// { get; private set; }
 
-    public InputListener Inputs { get; private set; }
-
-
-    public Board CurrentBoard;//TODO assign
-
-
-
-
-
+    public Board CurrentBoard;//TODO assign this
+    
 
     //public Action MoveCompleted;
 
@@ -60,12 +54,26 @@ public class BoardRenderer : MonoBehaviour {
 
     private Camera cam;
 
-    private GameObject canvas;
+    //private GameObject canvas;
 
+    public void Awake()
+    {
+        cam = GameObject.Find("Main Camera").GetComponent<Camera>();
+        
+        //canvas = GameObject.Find("Canvas").gameObject;
+        gameUI = transform.FindChild("InGame").GetComponent<InGameUI>();
+        endUI = transform.FindChild("EndOfGame").GetComponent<EndOfGameMenu>();//get level complete panel object
 
+        boardCanvas = gameUI.transform.FindChild("BoardPanel").gameObject;//TODO object? Add Board Component to it?
+
+        Inputs = GetComponent<InputListener>();
+    }
 
     public void Start()
     {
+
+        endUI.Init();
+        gameUI.Init();
 
         //GameObject canvas = GameObject.Find("Canvas").gameObject;
         //GameObject inGame = canvas.transform.FindChild("InGame").gameObject;
@@ -76,24 +84,20 @@ public class BoardRenderer : MonoBehaviour {
     }
 
 
-    public void Init()
-    {
-        canvas = GameObject.Find("Canvas").gameObject;
-        endUI = canvas.transform.FindChild("EndOfGame").GetComponent<EndOfGameMenu>();//get level complete panel object
-        cam = GameObject.Find("Main Camera").GetComponent<Camera>();
-        gameUI = canvas.transform.FindChild("InGame").GetComponent<InGameUI>();
+    //public void Init()
+    //{
 
-        endUI.Init();
-        gameUI.Init();
-    }
+
+
+    //}
 
     //TODO make static / move to factory class
     public void SetupBoard(Level lvl)
     {
 
         
-        GameObject inGame = canvas.transform.FindChild("InGame").gameObject;
-        boardCanvas = inGame.transform.FindChild("BoardPanel").gameObject;
+        //GameObject inGame = canvas.transform.FindChild("InGame").gameObject;
+        //boardCanvas = inGame.transform.FindChild("BoardPanel").gameObject;
         //boardCanvas = GameObject.Find("Canvas").transform.FindChild("InGame").transform.FindChild("BoardPanel").gameObject;
 
 
@@ -113,7 +117,7 @@ public class BoardRenderer : MonoBehaviour {
         
 
 
-        //Camera Zooming and positioning - Nicolas Magic
+        //Camera Zooming and positioning - Nicola's Magic
         float screenWidth = 1080;
         float screenHeight = 1920 - (150 * 2);
 
@@ -173,9 +177,9 @@ public class BoardRenderer : MonoBehaviour {
 
 
 
-        Inputs = ((GameObject)Instantiate(InputListener, new Vector3(0f, 0f, 0f), Quaternion.identity,boardCanvas.transform)).GetComponent<InputListener>();
+        //Inputs = ((GameObject)Instantiate(InputListener, new Vector3(0f, 0f, 0f), Quaternion.identity,boardCanvas.transform)).GetComponent<InputListener>();
         
-
+        //TODO move to method
         for (int r = 0; r < lvl.RowCount; r++)
         {
             for (int c = 0; c < lvl.ColumnCount; c++)
@@ -224,7 +228,7 @@ public class BoardRenderer : MonoBehaviour {
                                 go = DestinationPiece_Green;
                                 break;
                             default:
-                                throw new System.Exception("Unknown Tile Colour Type");
+                                throw new ArgumentException("Unknown Tile Colour Type");
                         }
                         break;
                     case Level.TileType.Redirect:

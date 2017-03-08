@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour {
     {
         if (pendingLevel != null)
         {
-            BoardRenderer.Init();
+            //BoardRenderer.Init();
             StartLevel(pendingLevel);
             pendingLevel = null;
         }
@@ -41,16 +41,33 @@ public class GameManager : MonoBehaviour {
             return;
         }
 
-        Instance = this;
-        BoardRenderer = GetComponent<BoardRenderer>();
         
-        DontDestroyOnLoad(gameObject);
+        //BoardRenderer = GetComponent<BoardRenderer>();
+        
+        
 
         DontDestroyOnLoad(GameObject.Find("BG Music").gameObject);
 
         levels = LevelManager.GetAllLevels();
 
-        SceneManager.sceneLoaded += (s, e) => LoadPendingLevel();
+
+        if (SceneManager.GetActiveScene().name == "GameBoard")
+        {
+            //SceneManager.sceneLoaded += (s, e) => LoadPendingLevel();
+            LoadPendingLevel();//Should be called every scene load anyway    
+
+            BoardRenderer = GameObject.Find("Canvas").GetComponent<BoardRenderer>();
+        }
+        
+
+
+
+        DontDestroyOnLoad(gameObject);
+
+        
+        Instance = this;
+
+
 
         //TODO remove
         //StartLevel(1);
@@ -97,7 +114,6 @@ public class GameManager : MonoBehaviour {
         {
             pendingLevel = lvl;
             SceneManager.LoadScene("GameBoard");
-
         }
         else
         {
