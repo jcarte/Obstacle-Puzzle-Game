@@ -332,29 +332,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ade91bb771b530d46b2a7135ddbacdb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MovablePiece_Red: {fileID: 47638432, guid: 3fd1c4191e5eb42448c9a1c3f3cba14c, type: 2}
-  MovablePiece_Yellow: {fileID: 47632800, guid: 3a7312073ff2aeb49b2f0ef8747e54aa,
+  MovablePiece_Red: {fileID: 1000012425783164, guid: 3fd1c4191e5eb42448c9a1c3f3cba14c,
     type: 2}
-  MovablePiece_Blue: {fileID: 47635360, guid: cccba76ef9542994eb4baf71829575c9, type: 2}
-  MovablePiece_Green: {fileID: 47633824, guid: e6b27ddc822e1674ea637d0e75ed0cdf, type: 2}
-  DestinationPiece_Red: {fileID: 47631264, guid: 54ab5e4be37d581469baf0095740e892,
+  MovablePiece_Yellow: {fileID: 1000011947190466, guid: 3a7312073ff2aeb49b2f0ef8747e54aa,
     type: 2}
-  DestinationPiece_Yellow: {fileID: 47630752, guid: ad0d8c36e8d607a4bab0c6d67c0c7943,
+  MovablePiece_Blue: {fileID: 1000012978498858, guid: cccba76ef9542994eb4baf71829575c9,
     type: 2}
-  DestinationPiece_Blue: {fileID: 47677216, guid: 4ca8ed9db7375f041b4eb21cb6fc70ee,
+  MovablePiece_Green: {fileID: 1000012082157684, guid: e6b27ddc822e1674ea637d0e75ed0cdf,
     type: 2}
-  DestinationPiece_Green: {fileID: 47674656, guid: 3434aecec8be8454ca1815c337d29c66,
+  DestinationPiece_Red: {fileID: 1000011112223610, guid: 54ab5e4be37d581469baf0095740e892,
     type: 2}
-  EmptyPiece: {fileID: 47673120, guid: 6cc5feac4cd87244cbba1e57f4f38155, type: 2}
-  LandingPiece: {fileID: 47673632, guid: 5c97a067c25d0614c946fd6df5646a51, type: 2}
-  NonLandingPiece: {fileID: 1176530273, guid: b958b4d54ca2a794fabb1bd320372f8a, type: 2}
-  ObstaclePiece: {fileID: 47669920, guid: fc5833ea08c3b064796437308908afe3, type: 2}
-  RedirectPiece: {fileID: 47668640, guid: d6eda7d96cf0fb44dae379b8a76506c6, type: 2}
-  EnemyPiece: {fileID: 47667872, guid: ac2cc955e9c5d704694a8ff0392aae8e, type: 2}
-  DisappearingPiece: {fileID: 47638560, guid: 48f73a287ec7e874e8fc8b787f1c0da9, type: 2}
-  FakeDisappearingPiece: {fileID: 47638048, guid: 6ffc0d65020c8a740bc3c0f9da473ac3,
+  DestinationPiece_Yellow: {fileID: 1000014070142512, guid: ad0d8c36e8d607a4bab0c6d67c0c7943,
     type: 2}
-  Inputs: {fileID: 0}
+  DestinationPiece_Blue: {fileID: 1000010242628094, guid: 4ca8ed9db7375f041b4eb21cb6fc70ee,
+    type: 2}
+  DestinationPiece_Green: {fileID: 1000013423233408, guid: 3434aecec8be8454ca1815c337d29c66,
+    type: 2}
+  EmptyPiece: {fileID: 1000011752833104, guid: 6cc5feac4cd87244cbba1e57f4f38155, type: 2}
+  LandingPiece: {fileID: 1000011718002606, guid: 5c97a067c25d0614c946fd6df5646a51,
+    type: 2}
+  NonLandingPiece: {fileID: 1000013276578108, guid: b958b4d54ca2a794fabb1bd320372f8a,
+    type: 2}
+  ObstaclePiece: {fileID: 1000013538552254, guid: fc5833ea08c3b064796437308908afe3,
+    type: 2}
+  RedirectPiece: {fileID: 1000012246038532, guid: d6eda7d96cf0fb44dae379b8a76506c6,
+    type: 2}
+  EnemyPiece: {fileID: 1000010347448452, guid: ac2cc955e9c5d704694a8ff0392aae8e, type: 2}
+  DisappearingPiece: {fileID: 1000010150590890, guid: 48f73a287ec7e874e8fc8b787f1c0da9,
+    type: 2}
+  FakeDisappearingPiece: {fileID: 1000012968229614, guid: 6ffc0d65020c8a740bc3c0f9da473ac3,
+    type: 2}
+  Inputs: {fileID: 114000013760819292, guid: a8cea0313c8b9174cbc4f7c997fd9744, type: 2}
   CurrentBoard: {fileID: 0}
 --- !u!1 &349524478
 GameObject:
@@ -856,7 +864,8 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114000013898473796, guid: 27e96c32d0cee5343a3e87c2a6f7f1d2, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 27e96c32d0cee5343a3e87c2a6f7f1d2, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &632778192

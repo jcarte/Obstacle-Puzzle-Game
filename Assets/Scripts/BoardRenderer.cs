@@ -40,6 +40,7 @@ public class BoardRenderer : MonoBehaviour {
 
     //public GameObject InputListener;//TODO move to update statement in this class
 
+    [HideInInspector]
     public InputListener Inputs;// { get; private set; }
 
     public Board CurrentBoard;//TODO assign this
@@ -60,7 +61,6 @@ public class BoardRenderer : MonoBehaviour {
     {
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
         
-        //canvas = GameObject.Find("Canvas").gameObject;
         gameUI = transform.FindChild("InGame").GetComponent<InGameUI>();
         endUI = transform.FindChild("EndOfGame").GetComponent<EndOfGameMenu>();//get level complete panel object
 
@@ -95,14 +95,17 @@ public class BoardRenderer : MonoBehaviour {
     public void SetupBoard(Level lvl)
     {
 
-        
+
         //GameObject inGame = canvas.transform.FindChild("InGame").gameObject;
         //boardCanvas = inGame.transform.FindChild("BoardPanel").gameObject;
         //boardCanvas = GameObject.Find("Canvas").transform.FindChild("InGame").transform.FindChild("BoardPanel").gameObject;
 
+        CurrentBoard = new Board(lvl);
+
+        CurrentBoard.GameFinished += OnFinished;//TODO do the subscriptions need to be cleaned out before setup new board?
 
 
-        
+
         endUI.Hide();
         
         gameUI.SetLevelNameText(lvl.Name);

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 /// <summary>
 /// All game logic around a board configuration
 /// </summary>
-public class Board : MonoBehaviour
+public class Board //: MonoBehaviour
 {
     
     public int NumberOfRows { get; private set; }
@@ -35,15 +35,25 @@ public class Board : MonoBehaviour
     private MovablePiece selectedPiece;
 
 
-    public void Init(Level lvl)
+    public Board(Level lvl)
     {
         this.lvl = lvl;
         MoveCount = 0;
         NumberOfRows = lvl.RowCount;
         NumberOfColumns = lvl.ColumnCount;
         board = new TilePiece[NumberOfRows, NumberOfColumns];
-
     }
+
+
+    //public void Init(Level lvl)
+    //{
+    //    this.lvl = lvl;
+    //    MoveCount = 0;
+    //    NumberOfRows = lvl.RowCount;
+    //    NumberOfColumns = lvl.ColumnCount;
+    //    board = new TilePiece[NumberOfRows, NumberOfColumns];
+
+    //}
 
     public void AddTile(TilePiece tp)
     {
@@ -182,9 +192,9 @@ public class Board : MonoBehaviour
                         jumpedOver.MovingPiece.Kill();
                     }
 
-                    //TODO board renderer have method for this???
-                    TilePiece newT = ((GameObject)Instantiate(GameManager.Instance.BoardRenderer.EmptyPiece, new Vector3(jumpedOver.Column, -jumpedOver.Row, 0f), Quaternion.identity)).GetComponent<TilePiece>();
-                    board[jumpedOver.Row, jumpedOver.Column] = newT;
+                    //TODO board renderer have method for this???***********************
+                    //TilePiece newT = ((GameObject)Instantiate(GameManager.Instance.BoardRenderer.EmptyPiece, new Vector3(jumpedOver.Column, -jumpedOver.Row, 0f), Quaternion.identity)).GetComponent<TilePiece>();
+                    //board[jumpedOver.Row, jumpedOver.Column] = newT;
                     jumpedOver.gameObject.SetActive(false);
                 }
 
@@ -193,8 +203,9 @@ public class Board : MonoBehaviour
                     if (landedOn.MovingPiece != null)
                         landedOn.MovingPiece.Kill();
 
-                    TilePiece newT = ((GameObject)Instantiate(GameManager.Instance.BoardRenderer.EmptyPiece, new Vector3(landedOn.Column, -landedOn.Row, 0f), Quaternion.identity)).GetComponent<TilePiece>();
-                    board[landedOn.Row, landedOn.Column] = newT;
+                    //TODO board renderer have method for this???***********************
+                    //TilePiece newT = ((GameObject)Instantiate(GameManager.Instance.BoardRenderer.EmptyPiece, new Vector3(landedOn.Column, -landedOn.Row, 0f), Quaternion.identity)).GetComponent<TilePiece>();
+                    //board[landedOn.Row, landedOn.Column] = newT;
                     landedOn.gameObject.SetActive(false);
                 }
 

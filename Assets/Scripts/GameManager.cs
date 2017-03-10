@@ -42,11 +42,18 @@ public class GameManager : MonoBehaviour {
         }
 
         
-        //BoardRenderer = GetComponent<BoardRenderer>();
-        
-        
 
-        DontDestroyOnLoad(GameObject.Find("BG Music").gameObject);
+    }
+
+
+
+    private void Start()
+    {
+        //BoardRenderer = GetComponent<BoardRenderer>();
+
+
+        //TODO restore
+        //DontDestroyOnLoad(GameObject.Find("BG Music").gameObject);
 
         levels = LevelManager.GetAllLevels();
 
@@ -58,23 +65,22 @@ public class GameManager : MonoBehaviour {
 
             BoardRenderer = GameObject.Find("Canvas").GetComponent<BoardRenderer>();
         }
-        
+
 
 
 
         DontDestroyOnLoad(gameObject);
 
-        
+
         Instance = this;
 
 
 
         //TODO remove
-        //StartLevel(1);
+        StartLevel(1);
         //StartLevel(LevelManager.GetDemoLevel());
         //StartLevel(LevelManager.GenerateBlankLevel(5, 10));
     }
-
 
     public void RetryLevel()
     {
