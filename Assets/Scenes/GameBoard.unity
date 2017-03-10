@@ -238,6 +238,7 @@ GameObject:
   - 114: {fileID: 228352605}
   - 114: {fileID: 228352604}
   - 114: {fileID: 228352608}
+  - 114: {fileID: 228352609}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -363,7 +364,17 @@ MonoBehaviour:
   FakeDisappearingPiece: {fileID: 1000012968229614, guid: 6ffc0d65020c8a740bc3c0f9da473ac3,
     type: 2}
   Inputs: {fileID: 114000013760819292, guid: a8cea0313c8b9174cbc4f7c997fd9744, type: 2}
-  CurrentBoard: {fileID: 0}
+--- !u!114 &228352609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 228352603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4d07d491d1b52a4eb37512b417d8645, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &349524478
 GameObject:
   m_ObjectHideFlags: 0
