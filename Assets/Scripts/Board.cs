@@ -192,9 +192,8 @@ public class Board //: MonoBehaviour
                         jumpedOver.MovingPiece.Kill();
                     }
 
-                    //TODO board renderer have method for this???***********************
-                    //TilePiece newT = ((GameObject)Instantiate(GameManager.Instance.BoardRenderer.EmptyPiece, new Vector3(jumpedOver.Column, -jumpedOver.Row, 0f), Quaternion.identity)).GetComponent<TilePiece>();
-                    //board[jumpedOver.Row, jumpedOver.Column] = newT;
+                    TilePiece newT = GameManager.Instance.BoardRenderer.CreateEmpty(jumpedOver.Row, jumpedOver.Column);
+                    board[jumpedOver.Row, jumpedOver.Column] = newT;
                     jumpedOver.gameObject.SetActive(false);
                 }
 
@@ -204,8 +203,8 @@ public class Board //: MonoBehaviour
                         landedOn.MovingPiece.Kill();
 
                     //TODO board renderer have method for this???***********************
-                    //TilePiece newT = ((GameObject)Instantiate(GameManager.Instance.BoardRenderer.EmptyPiece, new Vector3(landedOn.Column, -landedOn.Row, 0f), Quaternion.identity)).GetComponent<TilePiece>();
-                    //board[landedOn.Row, landedOn.Column] = newT;
+                    TilePiece newT = GameManager.Instance.BoardRenderer.CreateEmpty(landedOn.Row, landedOn.Column);
+                    board[landedOn.Row, landedOn.Column] = newT;
                     landedOn.gameObject.SetActive(false);
                 }
 

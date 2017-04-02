@@ -41,15 +41,15 @@ public class InGameUI : MonoBehaviour {
         //retryButton.onClick.AddListener(delegate () { GameManager.Instance.RetryLevel(); });
     }
 
-    public void SetMoveText(int moveCount)
-    {
-        movesText.text = moveCount + " Moves";
-    }
+    //public void SetMoveText(int moveCount)
+    //{
+    //    movesText.text = moveCount + " Moves";
+    //}
 
-    public void SetLevelNameText(string levelName)
-    {
-        levelNameText.text = levelName;
-    }
+    //public void SetLevelNameText(string levelName)
+    //{
+    //    levelNameText.text = levelName;
+    //}
 
     //// Use this for initialization
     //void Start () {

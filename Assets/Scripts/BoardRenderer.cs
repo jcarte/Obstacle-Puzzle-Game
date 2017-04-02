@@ -6,8 +6,6 @@ using System;
 using System.Diagnostics;
 
 
-//TODO embed into board canvas
-
 
 /// <summary>
 /// Factory class which constructs boards
@@ -15,9 +13,6 @@ using System.Diagnostics;
 public class BoardRenderer : MonoBehaviour {
 
     //Templates
-    //public GameObject[] MovablePieces;
-    //public GameObject[] DestinationPieces;
-
     public GameObject MovablePiece_Red;
     public GameObject MovablePiece_Yellow;
     public GameObject MovablePiece_Blue;
@@ -27,7 +22,6 @@ public class BoardRenderer : MonoBehaviour {
     public GameObject DestinationPiece_Yellow;
     public GameObject DestinationPiece_Blue;
     public GameObject DestinationPiece_Green;
-
 
     public GameObject EmptyPiece;
     public GameObject LandingPiece;
@@ -50,8 +44,9 @@ public class BoardRenderer : MonoBehaviour {
 
     private GameObject boardCanvas;
 
-    private EndOfGameMenu endUI;
-    private InGameUI gameUI;
+    //private EndOfGameMenu endUI;
+    //private InGameUI gameUI;
+    private GameUI ui;
 
     private Camera cam;
 
@@ -60,11 +55,12 @@ public class BoardRenderer : MonoBehaviour {
     public void Awake()
     {
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
-        
-        gameUI = transform.FindChild("InGame").GetComponent<InGameUI>();
-        endUI = transform.FindChild("EndOfGame").GetComponent<EndOfGameMenu>();//get level complete panel object
 
-        boardCanvas = gameUI.transform.FindChild("BoardPanel").gameObject;//TODO object? Add Board Component to it?
+        //gameUI = transform.FindChild("InGame").GetComponent<InGameUI>();
+        //endUI = transform.FindChild("EndOfGame").GetComponent<EndOfGameMenu>();//get level complete panel object
+        ui = GetComponent<GameUI>();
+
+        boardCanvas = transform.Find("BoardPanel").gameObject;//TODO object? Add Board Component to it?
 
         Inputs = GetComponent<InputListener>();
     }
@@ -72,8 +68,8 @@ public class BoardRenderer : MonoBehaviour {
     public void Start()
     {
 
-        endUI.Init();
-        gameUI.Init();
+        //endUI.Init();
+        //gameUI.Init();
 
         //GameObject canvas = GameObject.Find("Canvas").gameObject;
         //GameObject inGame = canvas.transform.FindChild("InGame").gameObject;
@@ -83,6 +79,12 @@ public class BoardRenderer : MonoBehaviour {
         //cam = GameObject.Find("Main Camera").GetComponent<Camera>();
     }
 
+
+
+    public TilePiece CreateEmpty(int row, int col)
+    {
+        return ((GameObject)Instantiate(EmptyPiece, new Vector3(col, -row, 0f), Quaternion.identity)).GetComponent<TilePiece>();
+    }
 
     //public void Init()
     //{
@@ -105,11 +107,12 @@ public class BoardRenderer : MonoBehaviour {
         CurrentBoard.GameFinished += OnFinished;//TODO do the subscriptions need to be cleaned out before setup new board?
 
 
-
-        endUI.Hide();
+        ui.HideGameEndMenu();
+        //endUI.Hide();
         
-        gameUI.SetLevelNameText(lvl.Name);
-        gameUI.SetMoveText(0);
+
+        ui.SetLevelNameText(lvl.Name);
+        ui.SetMoveText(0);
 
         //Clear board
         foreach (Transform child in boardCanvas.transform)
@@ -318,7 +321,7 @@ public class BoardRenderer : MonoBehaviour {
 
     private void OnFinished(Board.GameResult result)
     {
-        endUI.Show(CurrentBoard.MoveCount, result);//TODO move not right shouldn't be handling ui inside the board object
+        ui.ShowGameEndMenu(CurrentBoard.MoveCount, result);//TODO move not right shouldn't be handling ui inside the board object
         //if (GameFinished != null)//TODO don't think this is used
         //{
         //    GameFinished.Invoke(this, result);
@@ -327,7 +330,7 @@ public class BoardRenderer : MonoBehaviour {
 
     private void OnTurnEnd()//TODO hookup
     {
-        gameUI.SetMoveText(CurrentBoard.MoveCount);
+        ui.SetMoveText(CurrentBoard.MoveCount);
     }
 
 
